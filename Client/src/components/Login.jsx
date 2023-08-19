@@ -11,7 +11,7 @@ const login = () => {
     ]
 
     return(
-        <div className="root">
+        <div className="main">
             {
                 animationPaths.map((path) => <img className="rotating" key={path} src={path}/>)
             }

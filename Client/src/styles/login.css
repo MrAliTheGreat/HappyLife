@@ -1,47 +1,51 @@
-.root {
-    height: 100vh;
+.main {
+    height: 95vh;
     display: flex;
     flex-direction: column;
-    flex: 1;
     align-items: center;
     justify-content: center;
 }
 
 .logo {
     width: 200px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    box-shadow: #0000004D 0px 19px 38px, #00000038 0px 15px 12px;
 }
 
 .rotating {
     position: absolute;
     width: 70px;
-    transform: translate(145px, -175px);
+    transform: translate(-145px, -200px);
     border-radius: 5px;
-    animation: circle 12s linear infinite;
-    opacity: 80%;
+    opacity: 0;
+    animation: circle 12s linear infinite, circleOpacity 12s linear forwards;
 }
 
 input {
     font-family: "Pixellari", sans-serif;
-    font-size: 15px;
+    font-size: 20px;
     color: #FFFFFF;
     width: 175px;
     margin-top: 5px;
     padding: 5px;
     border-radius: 10px;
     border: 3px solid black;
-    background-color: #17202a;
+    background-color: #17202A;
+    
 }
 
 button {
     font-family: "Pixellari", sans-serif;
-    font-size: 15px;
+    font-size: 16px;
     color: #FFFFFF;
-    width: 190px;
-    margin-top: 8px;
+    width: 193px;
+    margin-top: 10px;
     padding: 5px;
     border-radius: 10px;
     border: 3px solid black;
-    background-color: #28b463;
+    background-color: #28B463;
+    box-shadow: #28b46330 0px 19px 38px, #28b46310 0px 15px 12px;
 }
 
 button:active {
@@ -50,17 +54,23 @@ button:active {
 
 @keyframes circle {
     25%{
-        transform: translate(145px, 175px);
+        transform: translate(145px, -200px);
     }
     50%{
-        transform: translate(-145px, 175px);
+        transform: translate(145px, 200px);
     }
     75%{
-        transform: translate(-145px, -175px);
+        transform: translate(-145px, 200px);
     }
     100%{
-        transform: translate(145px, -175px);
+        transform: translate(-145px, -200px);
     }        
+}
+
+@keyframes circleOpacity {
+    100%{
+        opacity: 0.7;
+    }
 }
 
 img:nth-of-type(1) {
