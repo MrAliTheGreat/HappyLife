@@ -11,20 +11,85 @@
     width: 200px;
 }
 
+.rotating {
+    position: absolute;
+    width: 70px;
+    transform: translate(145px, -175px);
+    border-radius: 5px;
+    animation: circle 12s linear infinite;
+    opacity: 80%;
+}
+
 input {
     font-family: "Pixellari", sans-serif;
-    font-size: 20px;
+    font-size: 15px;
     color: #FFFFFF;
-    margin-top: 8px;
+    width: 175px;
+    margin-top: 5px;
     padding: 5px;
     border-radius: 10px;
     border: 3px solid black;
     background-color: #17202a;
 }
 
+button {
+    font-family: "Pixellari", sans-serif;
+    font-size: 15px;
+    color: #FFFFFF;
+    width: 190px;
+    margin-top: 8px;
+    padding: 5px;
+    border-radius: 10px;
+    border: 3px solid black;
+    background-color: #28b463;
+}
+
+button:active {
+    transform: translate(1px, 1px);
+}
+
+@keyframes circle {
+    25%{
+        transform: translate(145px, 175px);
+    }
+    50%{
+        transform: translate(-145px, 175px);
+    }
+    75%{
+        transform: translate(-145px, -175px);
+    }
+    100%{
+        transform: translate(145px, -175px);
+    }        
+}
+
+img:nth-of-type(1) {
+    animation-delay: 0s;
+}
+
+img:nth-of-type(2) {
+    animation-delay: 2s;
+}
+
+img:nth-of-type(3) {
+    animation-delay: 4s;
+}
+
+img:nth-of-type(4) {
+    animation-delay: 6s;
+}
+
+img:nth-of-type(5) {
+    animation-delay: 8s;
+}
+
+img:nth-of-type(6) {
+    animation-delay: 10s;
+}
+
 @font-face {
     font-family: "Pixellari";
-    src: url("../../public/Pixellari.ttf") format("opentype");
+    src: url("/Pixellari.ttf") format("opentype");
     font-weight: normal;
     font-style: normal;
 }
