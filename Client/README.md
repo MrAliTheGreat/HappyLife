@@ -1,0 +1,1 @@
+Client side of Happy Life web application
