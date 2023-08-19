@@ -1,9 +1,18 @@
 import Login from "./components/Login"
+import Home from "./components/home"
+import Header from "./components/header"
 
 function App() {
+  const renderOptions = "header"
+
   return (
     <>
-      <Login />
+      {
+        renderOptions === "login" ? <Login /> :
+        renderOptions === "home" ? <Home /> :
+        renderOptions === "header" ? <Header /> :
+        null
+      }
     </>
   )
 }

@@ -1,4 +1,4 @@
-import "../styles/login.css"
+import styles from "../styles/login.module.css"
 
 const login = () => {
     const animationPaths = [
@@ -11,14 +11,14 @@ const login = () => {
     ]
 
     return(
-        <div className="main">
+        <div className={styles.main}>
             {
-                animationPaths.map((path) => <img className="rotating" key={path} src={path}/>)
+                animationPaths.map((path) => <img className={styles.rotating} key={path} src={path}/>)
             }
-            <img className="logo" src="/animations/Run.gif" />
-            <input placeholder="Username" type="text" />           
-            <input placeholder="Password" type="text" />
-            <button> Login </button>
+            <img className={styles.logo} src="/animations/Run.gif" />
+            <input className={styles.input} placeholder="Username" type="text" />           
+            <input className={styles.input} placeholder="Password" type="text" />
+            <button className={styles.button}> Login </button>
         </div>
     )
 }
