@@ -11,7 +11,14 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    animation: holderBounce 1.5s forwards;
+    animation: holderBounceIn 1.5s forwards;
+}
+
+.holderOut {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    animation: holderBounceOut 1s forwards;
 }
 
 .logo {
@@ -30,6 +37,13 @@
     animation: circle 12s linear infinite, circleOpacity 12s linear forwards;
 }
 
+.rotatingOut {
+    position: absolute;
+    width: 70px;
+    border-radius: 5px;
+    opacity: 0;
+}
+
 .input {
     font-family: "Pixellari", sans-serif;
     font-size: 20px;
@@ -40,7 +54,7 @@
     border-radius: 10px;
     border: 3px solid black;
     background-color: #17202A;
-    
+    text-align: center;
 }
 
 .button {
@@ -81,7 +95,7 @@
     }
 }
 
-@keyframes holderBounce {
+@keyframes holderBounceIn {
     0%{
         transform: scale(0%);
         opacity: 0;
@@ -92,6 +106,19 @@
     100%{
         transform: scale(100%);
         opacity: 1;
+    }
+}
+
+@keyframes holderBounceOut {
+    0%{
+        transform: scale(100%);       
+    }
+    20%{
+        transform: scale(110%);
+    }
+    100%{
+        transform: scale(0%);
+        opacity: 0;
     }
 }
 
