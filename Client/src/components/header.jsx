@@ -3,7 +3,7 @@ import styles from "../styles/header.module.css"
 const header = () => {
     return(
         <div className={styles.main}>
-            Header
+            <img className={styles.logo} src="/public/animations/Run.gif"/>
         </div>
     )
 }

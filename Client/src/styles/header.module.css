@@ -1,3 +1,38 @@
 .main {
-    background-color: #17202a;
+    display: flex;
+    align-items: center;
+    position: fixed;
+    width: 100%;
+    background-color: #17202A;
+    padding: 10px;
+    box-sizing: border-box;
+    animation: headerFade 0.7s ease-in;
+}
+
+.logo {
+    border-radius: 10px;
+}
+
+@keyframes headerFade {
+    0%{
+        opacity: 0;
+    }
+}
+
+@media (max-width:850px) {
+    .main {
+        justify-content: center;
+    }
+    .logo {
+        width: 100px;
+    }
+}
+
+@media (min-width:851px) {
+    .main {
+        justify-content: flex-start;
+    }
+    .logo{
+        width: 150px;
+    }
 }
