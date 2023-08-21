@@ -2,7 +2,7 @@ import styles from "../styles/welcome.module.css"
 
 const welcome = () => {
     // Find this out from user's token
-    const username = "Margirit"
+    const username = "Dr"
 
     return(
         <div className={styles.main}>

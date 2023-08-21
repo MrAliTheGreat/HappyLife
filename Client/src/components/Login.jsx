@@ -14,8 +14,8 @@ const login = ({ setRender }) => {
 
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
+    const [answer, setAnswer] = useState(false)
     const [enter, setEnter] = useState(true)
-
 
     const handleLogin = () => {
         console.log(`Username: ${username}`)
@@ -41,7 +41,13 @@ const login = ({ setRender }) => {
                 <img className={styles.logo} src="/animations/Run.gif" />
                 <input className={styles.input} placeholder="Username" type="text" value={username} onChange={(e) => setUsername(e.target.value)} />           
                 <input className={styles.input} placeholder="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-                <button className={styles.button} onClick={handleLogin}> Login </button>
+                <div className={styles.new}>
+                    New User?
+                    <div className={`${styles.answer} ${answer ? styles.answerFlipYes : styles.answerFlipNo}`} onClick={() => setAnswer(!answer)}>
+                        {answer ? "Yeah" : "Nope"}
+                    </div>
+                </div>
+                <button className={styles.button} onClick={handleLogin}> {answer ? "Sign up" : "Sign in"} </button>
             </div>
         </div>
     )
