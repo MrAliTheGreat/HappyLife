@@ -1,8 +1,11 @@
+import { useState } from "react"
 import styles from "../styles/summary.module.css"
 
 const summary = () => {
     const remainingCal = 2000
     const totalCal = 6000
+
+    const [detail, setDetail] = useState("")
 
     const getBorderStyling = (remainingCal, totalCal) => {
         const ratioCal = remainingCal / totalCal
@@ -37,9 +40,14 @@ const summary = () => {
         return "linear-gradient(-45deg, #13e189, 40%, #008684)"
     }
 
+    const handleDetail = () => {
+        detail === "shrink" ? setDetail("expand") :
+        detail === "expand" ? setDetail("shrink") : setDetail("shrink")
+    }
+
     return(
-    <div className={styles.main} style={{background: getMainGradientStyling(remainingCal, totalCal)}}>
-            <div className={styles.countGood} style={{border: getBorderStyling(remainingCal, totalCal), background: getCircleStyling(remainingCal, totalCal)}} >
+    <div className={styles.main} style={{background: getMainGradientStyling(remainingCal, totalCal)}} onClick={handleDetail} >
+            <div className={`${styles.count} ${detail === "shrink" ? styles.countShrink : detail === "expand" ? styles.countExpand : ""}`} style={{border: getBorderStyling(remainingCal, totalCal), background: getCircleStyling(remainingCal, totalCal)}}>
                 {remainingCal} / {totalCal}
             </div>
         </div>

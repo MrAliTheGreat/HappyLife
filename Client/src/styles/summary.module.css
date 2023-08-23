@@ -12,7 +12,15 @@
     box-sizing: border-box;
 }
 
-.countGood{
+.main:hover {
+    cursor: pointer;
+}
+
+.main:active{
+    transform: translate(1px, 1px);
+}
+
+.count{
     display: flex;
     align-items: center;
     justify-content: center;
@@ -20,6 +28,26 @@
     height: 250px;
     border-radius: 50%;
     box-shadow: #15020230 0px 19px 38px, #15020210 0px 15px 12px;
+}
+
+.countShrink{
+    animation: shrink 0.3s linear forwards;
+}
+
+.countExpand{
+    animation: expand 0.3s linear forwards;
+}
+
+@keyframes shrink {
+    100%{
+        transform: scale(50%) translateY(-200px);
+    }
+}
+
+@keyframes expand {
+    0%{
+        transform: scale(50%) translateY(-200px);
+    }
 }
 
 @media (max-width:900px) {

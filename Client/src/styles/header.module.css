@@ -7,6 +7,7 @@
     background: linear-gradient(180deg, #17202A, #2a3845);
     padding: 10px;
     box-sizing: border-box;
+    z-index: 1;
     animation: headerFade 0.7s ease-in;
 }
 
