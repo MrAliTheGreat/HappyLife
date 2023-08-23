@@ -1,8 +1,9 @@
 .main {
-    font-size: 28px;
     font-family: "Pixellari", sans-serif;
     color: #FFFFFF;
     display: flex;
+    position: relative;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     border-radius: 10px;
@@ -24,6 +25,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    font-size: 40px;
     width: 250px;
     height: 250px;
     border-radius: 50%;
@@ -38,6 +40,29 @@
     animation: expand 0.3s linear forwards;
 }
 
+.details{
+    position: absolute;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 10px;
+    font-size: 20px;
+    box-sizing: border-box;
+}
+
+.detailsStart{
+    display: none;
+}
+
+.detailsShow{
+    animation: show 0.3s linear forwards;
+}
+
+.detailsHide{
+    animation: hide 0.3s linear forwards;
+}
+
 @keyframes shrink {
     100%{
         transform: scale(50%) translateY(-200px);
@@ -50,6 +75,25 @@
     }
 }
 
+@keyframes show {
+    0%{
+        display: none;
+        transform: translateY(140px) scale(0%);
+        opacity: 0;
+    }
+}
+
+@keyframes hide {
+    20%{
+        opacity: 0.2;
+    }
+    100%{
+        display: none;
+        transform: translateY(90px);
+        opacity: 0;
+    }
+}
+
 @media (max-width:900px) {
     .main {
         width: 95%;
@@ -57,11 +101,17 @@
         max-width: 400px;
         height: 350px;
     }
+    .details {
+        top: 155px;
+    }
 }
 
 @media (min-width:901px) {
     .main {
         flex: 1;
         height: 400px;
+    }
+    .details {
+        top: 180px;
     }
 }

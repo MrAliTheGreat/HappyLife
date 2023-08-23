@@ -2,7 +2,7 @@ import { useState } from "react"
 import styles from "../styles/summary.module.css"
 
 const summary = () => {
-    const remainingCal = 2000
+    const remainingCal = 5000
     const totalCal = 6000
 
     const [detail, setDetail] = useState("")
@@ -49,6 +49,22 @@ const summary = () => {
     <div className={styles.main} style={{background: getMainGradientStyling(remainingCal, totalCal)}} onClick={handleDetail} >
             <div className={`${styles.count} ${detail === "shrink" ? styles.countShrink : detail === "expand" ? styles.countExpand : ""}`} style={{border: getBorderStyling(remainingCal, totalCal), background: getCircleStyling(remainingCal, totalCal)}}>
                 {remainingCal} / {totalCal}
+            </div>
+            <div className={`${styles.details} ${detail === "shrink" ? styles.detailsShow : detail === "expand" ? styles.detailsHide : styles.detailsStart}`}>
+                <div>
+                    Remaining Calories (Cal): <br/>
+                    Total Calories (Cal): <br/>
+                    Intake Calories (Cal): <br/>
+                    Exercise Calories (Cal): <br/>
+                    Streak (Days): <br/>
+                </div>
+                <div>
+                    {remainingCal} <br/>
+                    {totalCal} <br/>
+                    5100 <br/>
+                    1000 <br/>
+                    390 <br/>
+                </div>
             </div>
         </div>
     )
