@@ -1,7 +1,6 @@
 .main {
     font-family: "Pixellari", sans-serif;
     color: #FFFFFF;
-    font-size: 40px;
     height: 100vh;
     display: flex;
     align-items: center;
@@ -11,13 +10,9 @@
     overflow: hidden;
 }
 
-.text {
-    animation: moveIn 2s ease-in forwards;
-}
-
-@keyframes moveIn {
+@keyframes moveInWide {
     0%{
-        transform: scale(3000%);
+        transform: scale(12000%);
     }
     30%{
         transform: scale(160%);
@@ -27,5 +22,38 @@
     }  
     100%{
         transform: scale(100%);
+    }
+}
+
+@keyframes moveInNarrow {
+    0%{
+        transform: scale(12000%);
+    }
+    30%{
+        transform: scale(140%);
+    }
+    90%{
+        transform: scale(120%);
+    }  
+    100%{
+        transform: scale(100%);
+    }
+}
+
+@media (max-width:850px) {
+    .main{
+        font-size: 28px;
+    }
+    .text{
+        animation: moveInNarrow 3s ease-in forwards;
+    }
+}
+
+@media (min-width:851px) {
+    .main{
+        font-size: 50px;
+    }
+    .text{
+        animation: moveInWide 3s ease-in forwards;
     }
 }
