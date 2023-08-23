@@ -20,7 +20,7 @@
     }
 }
 
-@media (max-width:850px) {
+@media (max-width:900px) {
     .main {
         justify-content: center;
     }
@@ -29,7 +29,7 @@
     }
 }
 
-@media (min-width:851px) {
+@media (min-width:901px) {
     .main {
         justify-content: flex-start;
     }

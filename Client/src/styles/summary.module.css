@@ -1,5 +1,30 @@
 .main {
-    background-color: #FFFFFF;
+    background: linear-gradient(-45deg, #13e189, 40%, #008684);
+    box-shadow: #13e18930 0px 19px 38px, #13e18910 0px 15px 12px;
+    font-size: 22px;
+    font-family: "Pixellari", sans-serif;
+    color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     border-radius: 10px;
     padding: 20px;
+    margin: 20px;
+    box-sizing: border-box;
+}
+
+@media (max-width:900px) {
+    .main {
+        width: 95%;
+        min-width: 200px;
+        max-width: 400px;
+        height: 350px;
+    }
+}
+
+@media (min-width:901px) {
+    .main {
+        flex: 1;
+        height: 400px;
+    }
 }

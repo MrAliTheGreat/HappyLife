@@ -1,21 +1,28 @@
 .main {
     display: flex;
-    flex-direction: row;
     align-items: center;
-    justify-content: space-between;
-    padding: 20px;
+    justify-content: center;
+    padding: 10px;
     box-sizing: border-box;
-    border: 5px solid red;
+    animation: homeFade 0.7s ease-in;
 }
 
-@media (max-width:850px) {
-    .main {
-        margin-top: 110px;
+@keyframes homeFade {
+    0%{
+        opacity: 0;
     }
 }
 
-@media (min-width:851px) {
+@media (max-width:900px) {
     .main {
-        margin-top: 145px;
+        margin-top: 90px;
+        flex-direction: column;
+    }
+}
+
+@media (min-width:901px) {
+    .main {
+        margin-top: 200px;
+        flex-direction: row;
     }
 }
