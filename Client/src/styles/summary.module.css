@@ -1,7 +1,5 @@
 .main {
-    background: linear-gradient(-45deg, #13e189, 40%, #008684);
-    box-shadow: #13e18930 0px 19px 38px, #13e18910 0px 15px 12px;
-    font-size: 22px;
+    font-size: 28px;
     font-family: "Pixellari", sans-serif;
     color: #FFFFFF;
     display: flex;
@@ -10,7 +8,18 @@
     border-radius: 10px;
     padding: 20px;
     margin: 20px;
+    box-shadow: #00000030 0px 19px 38px, #00000010 0px 15px 12px;
     box-sizing: border-box;
+}
+
+.countGood{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 250px;
+    height: 250px;
+    border-radius: 50%;
+    box-shadow: #15020230 0px 19px 38px, #15020210 0px 15px 12px;
 }
 
 @media (max-width:900px) {
