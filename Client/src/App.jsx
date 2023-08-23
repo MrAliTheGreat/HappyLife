@@ -12,7 +12,8 @@ function App() {
     <>
       {
         render === "login" ? <Login setRender={setRender} /> :
-        render === "welcome" ? <Welcome /> :
+        render === "welcome" ? <Welcome setRender={setRender} /> :
+        render === "home" ? <Home /> :
         null
       }
     </>

@@ -1,0 +1,21 @@
+.main {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    box-sizing: border-box;
+    border: 5px solid red;
+}
+
+@media (max-width:850px) {
+    .main {
+        margin-top: 110px;
+    }
+}
+
+@media (min-width:851px) {
+    .main {
+        margin-top: 145px;
+    }
+}

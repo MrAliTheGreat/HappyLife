@@ -18,9 +18,6 @@ const login = ({ setRender }) => {
     const [enter, setEnter] = useState(true)
 
     const handleLogin = () => {
-        console.log(`Username: ${username}`)
-        console.log(`Password: ${password}`)
-
         // Checking credentials in the database
         // What happens if no one is found?
         

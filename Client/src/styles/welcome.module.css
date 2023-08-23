@@ -19,9 +19,11 @@
     }
     90%{
         transform: scale(140%);
+        opacity: 1;
     }  
     100%{
         transform: scale(100%);
+        opacity: 0;
     }
 }
 
@@ -34,9 +36,11 @@
     }
     90%{
         transform: scale(120%);
+        opacity: 1;
     }  
     100%{
         transform: scale(100%);
+        opacity: 0;
     }
 }
 
