@@ -2,7 +2,7 @@ import { useState } from "react"
 import styles from "../styles/summary.module.css"
 
 const summary = () => {
-    const remainingCal = 5000
+    const remainingCal = 4000
     const totalCal = 6000
 
     const [detail, setDetail] = useState("")

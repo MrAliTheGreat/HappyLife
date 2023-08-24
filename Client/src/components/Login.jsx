@@ -44,7 +44,7 @@ const login = ({ setRender }) => {
                         {answer ? "Yeah" : "Nope"}
                     </div>
                 </div>
-                <button className={styles.button} onClick={handleLogin}> {answer ? "Sign up" : "Sign in"} </button>
+                <button className={styles.button} onClick={handleLogin}> {answer ? "Create New Account" : "Sign in"} </button>
             </div>
         </div>
     )
