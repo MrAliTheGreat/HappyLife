@@ -52,10 +52,10 @@ const summary = () => {
             </div>
             <div className={`${styles.details} ${detail === "shrink" ? styles.detailsShow : detail === "expand" ? styles.detailsHide : styles.detailsStart}`}>
                 <div>
-                    Remaining Calories (Cal): <br/>
-                    Total Calories (Cal): <br/>
-                    Intake Calories (Cal): <br/>
-                    Exercise Calories (Cal): <br/>
+                    Remaining (Cal): <br/>
+                    Total (Cal): <br/>
+                    Intake (Cal): <br/>
+                    Exercise (Cal): <br/>
                     Streak (Days): <br/>
                 </div>
                 <div>

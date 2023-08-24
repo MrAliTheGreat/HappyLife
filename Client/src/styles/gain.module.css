@@ -36,11 +36,13 @@
 }
 
 .date {
-    font-size: 26px;
+    font-size: 25px;
     width: 100%;
     padding-bottom: 10px;
     text-align: center;
-    border-bottom: 2px solid #caffb5;
+    color: #ffdd52;
+    white-space: pre-line; /* \n treated as <br/> */
+    border-bottom: 2px solid #ffdd52;
 }
 
 .list {
@@ -48,7 +50,9 @@
     flex-direction: column;
     width: 100%;
     padding-top: 5px;
-    font-size: 24px;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 22px;
     box-sizing: border-box;
     overflow: scroll;
     scrollbar-width: none;
@@ -66,6 +70,13 @@
     display: none;
 }
 
+.graph{
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
 @keyframes fadeIn {
     0%{
         display: none;
@@ -75,9 +86,15 @@
         display: none;
         opacity: 0;
     }
+    100%{
+        display: flex;
+    }
 }
 
 @keyframes fadeOut {
+    0%{
+        display: flex;
+    }
     100%{
         display: none;
         opacity: 0;

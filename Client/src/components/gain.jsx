@@ -1,6 +1,25 @@
 import { useState } from "react"
+import {
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    BarElement,
+    Title,
+    Tooltip,
+    Legend,
+} from 'chart.js';
+import { Bar } from 'react-chartjs-2';
 
 import styles from "../styles/gain.module.css"
+
+ChartJS.register(
+    CategoryScale,
+    LinearScale,
+    BarElement,
+    Title,
+    Tooltip,
+    Legend
+);
 
 const gain = () => {
     const intake = [
@@ -58,9 +77,102 @@ const gain = () => {
 
     const [graphShow, setGraphShow] = useState("")
 
+    const barOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        backgroundColor: "#9aff79",
+        borderColor: "#000000",
+        borderWidth: 3,
+        borderRadius: 10,
+        plugins: {
+            legend: {
+                display: false,
+            },
+            title: {
+                display: true,
+                text: "Current Week",
+                color: "#ffdd52",
+                font: {
+                    family: '"Pixellari", sans-serif',
+                    weight: "normal",
+                    size: 25,
+                }
+            },
+            tooltip: {
+                titleFont: {
+                    family: '"Pixellari", sans-serif',
+                    weight: "normal",
+                    size: 15
+                },
+                bodyFont: {
+                    family: '"Pixellari", sans-serif',
+                    weight: "normal",
+                    size: 18                    
+                }
+            }            
+        },
+        scales: {
+            x: {
+                grid: {
+                    display: false
+                },
+                border: {
+                    color: "#78e3aa",
+                    width: 4
+                },                
+                ticks: {
+                    color: "#FFF",
+                    font: {
+                        family: '"Pixellari", sans-serif',
+                        weight: "normal",
+                        size: 15,
+                    }
+                }
+            },
+            y: {
+                grid: {
+                    display: false
+                },
+                border: {
+                    color: "#78e3aa",
+                    width: 4
+                },
+                ticks: {
+                    color: "#FFF",
+                    font: {
+                        family: '"Pixellari", sans-serif',
+                        weight: "normal",
+                        size: 13,
+                    }
+                }                
+            }
+        }
+    }
+
+    const barData = {
+        labels: ["Sat", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri"],
+        datasets: [{
+            data: [5600, 7800, 4010, 12050, 0, 900, 0],
+        }]
+    }
+
     const handleGraph = () => {
         graphShow === "show" ? setGraphShow("hide") :
         graphShow === "hide" ? setGraphShow("show") : setGraphShow("show")
+    }
+
+    const getDayDate = () => {
+        const date = new Date().toLocaleDateString(
+            "en-GB",
+            {
+                weekday: "long",
+                year: "numeric",
+                month: "long",
+                day: "numeric"
+            }
+        ).split(",")
+        
+        return `${date[0]} \n ${date[1].trim()}`
     }
 
     return(
@@ -68,15 +180,7 @@ const gain = () => {
             <div className={`${styles.holder} ${graphShow === "show" ? styles.fadeOut : graphShow === "hide" ? styles.fadeIn : ""}`}>
                 <div className={styles.date}>
                     {
-                        new Date().toLocaleDateString(
-                            "en-GB",
-                            {
-                                weekday: "long",
-                                year: "numeric",
-                                month: "long",
-                                day: "numeric"
-                            }
-                        )
+                        getDayDate()
                     }
                 </div>
                 <div className={styles.list}>
@@ -92,8 +196,8 @@ const gain = () => {
                     }
                 </div>
             </div>
-            <div className={`${graphShow === "show" ? styles.fadeIn : graphShow === "hide" ? styles.fadeOut : styles.start}`}>
-                GAIN
+            <div className={`${styles.graph} ${graphShow === "show" ? styles.fadeIn : graphShow === "hide" ? styles.fadeOut : styles.start}`}>
+                <Bar options={barOptions} data={barData}/>
             </div>
         </div>
     )
