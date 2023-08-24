@@ -56,11 +56,16 @@ const gain = () => {
         }
     ]
 
-    const [graphShow, setGraphShow] = useState(false)
+    const [graphShow, setGraphShow] = useState("")
+
+    const handleGraph = () => {
+        graphShow === "show" ? setGraphShow("hide") :
+        graphShow === "hide" ? setGraphShow("show") : setGraphShow("show")
+    }
 
     return(
-        <div className={styles.main} onClick={() => setGraphShow(!graphShow)}>
-            <div className={styles.holder}>
+        <div className={styles.main} onClick={handleGraph}>
+            <div className={`${styles.holder} ${graphShow === "show" ? styles.fadeOut : graphShow === "hide" ? styles.fadeIn : ""}`}>
                 <div className={styles.date}>
                     {
                         new Date().toLocaleDateString(
@@ -86,6 +91,9 @@ const gain = () => {
                         })
                     }
                 </div>
+            </div>
+            <div className={`${graphShow === "show" ? styles.fadeIn : graphShow === "hide" ? styles.fadeOut : styles.start}`}>
+                GAIN
             </div>
         </div>
     )
