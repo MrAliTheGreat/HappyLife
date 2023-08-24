@@ -7,6 +7,8 @@
     padding: 20px;
     margin: 20px;
     box-sizing: border-box;
+
+    position: relative;
 }
 
 .main:hover {
@@ -25,6 +27,10 @@
     align-items: center;
     justify-content: flex-start;
     box-sizing: border-box;
+
+    position: absolute;
+    top: 0;
+    left: 0;
 }
 
 .fadeIn {
@@ -72,9 +78,14 @@
 
 .graph{
     height: 100%;
+    width: 100%;
     align-items: center;
     justify-content: center;
     box-sizing: border-box;
+
+    position: absolute;
+    top: 0;
+    left: 0;    
 }
 
 @keyframes fadeIn {
