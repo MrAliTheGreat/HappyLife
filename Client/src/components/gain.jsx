@@ -176,7 +176,7 @@ const gain = () => {
     }
 
     return(
-        <div className={styles.main} onClick={handleGraph}>
+        <div className={styles.main} onDoubleClick={handleGraph}>
             <div className={`${styles.holder} ${graphShow === "show" ? styles.fadeOut : graphShow === "hide" ? styles.fadeIn : ""}`}>
                 <div className={styles.date}>
                     {

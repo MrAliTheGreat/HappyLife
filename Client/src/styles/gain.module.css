@@ -1,14 +1,12 @@
 .main {
     background: linear-gradient(60deg, #ff3d3d, #0248dd);
     box-shadow: #ff3d3d30 0px 19px 38px, #ff3d3d10 0px 15px 12px;
+    position: relative;
     font-family: "Pixellari", sans-serif;
-    color: #FFFFFF;
     border-radius: 10px;
     padding: 20px;
     margin: 20px;
     box-sizing: border-box;
-
-    position: relative;
 }
 
 .main:hover {
@@ -22,23 +20,24 @@
 .holder {
     width: 100%;
     height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    color: #FFFFFF;
+    padding: 15px;    
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
     box-sizing: border-box;
-
-    position: absolute;
-    top: 0;
-    left: 0;
 }
 
 .fadeIn {
-    animation: fadeIn 0.8s ease-in-out forwards;
+    animation: fadeIn 0.5s ease-in-out forwards;
 }
 
 .fadeOut {
-    animation: fadeOut 0.4s ease-in-out forwards;
+    animation: fadeOut 0.5s ease-in-out forwards;
 }
 
 .date {
@@ -69,7 +68,7 @@
     align-items: center;
     align-content: center;
     justify-content: space-between;
-    padding: 10px;
+    padding: 5px;
 }
 
 .start{
@@ -79,35 +78,21 @@
 .graph{
     height: 100%;
     width: 100%;
-    align-items: center;
-    justify-content: center;
-    box-sizing: border-box;
-
     position: absolute;
     top: 0;
-    left: 0;    
+    left: 0;
+    padding: 10px;
+    box-sizing: border-box;   
 }
 
 @keyframes fadeIn {
     0%{
-        display: none;
         opacity: 0;
-    }
-    50%{
-        display: none;
-        opacity: 0;
-    }
-    100%{
-        display: flex;
     }
 }
 
 @keyframes fadeOut {
-    0%{
-        display: flex;
-    }
     100%{
-        display: none;
         opacity: 0;
     }    
 }
