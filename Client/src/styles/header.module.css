@@ -1,6 +1,7 @@
 .main {
     display: flex;
     align-items: center;
+    justify-content: center;
     position: fixed;
     top: 0;
     width: 100%;
@@ -11,7 +12,29 @@
     animation: headerFade 0.7s ease-in;
 }
 
+.holder {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    flex: 1;
+}
+
+.left {
+    justify-content: flex-start;
+    padding-left: 10px;
+}
+
+.right {
+    justify-content: flex-end;
+    padding-right: 10px;
+}
+
 .logo {
+    border-radius: 10px;
+    margin: 0px 10px;
+}
+
+.image {
     border-radius: 10px;
 }
 
@@ -23,18 +46,24 @@
 
 @media (max-width:900px) {
     .main {
-        justify-content: center;
+        height: 100px;
     }
     .logo {
         width: 100px;
+    }
+    .image {
+        width: 70px; /* Synced with logo */
     }
 }
 
 @media (min-width:901px) {
     .main {
-        justify-content: flex-start;
+        height: 150px;
     }
-    .logo{
+    .logo {
         width: 150px;
+    }
+    .image {
+        width: 105px; /* Synced with logo */
     }
 }
