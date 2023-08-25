@@ -30,9 +30,14 @@
     max-width: 220px;
     max-height: 220px;
     width: 75%;
-    aspect-ratio: 1 / 1;
     border-radius: 50%;
     box-shadow: #15020230 0px 19px 38px, #15020210 0px 15px 12px;
+}
+
+.count::before{
+    /* Equal to aspect-ratio: 1/1; */
+    padding-top: 100%;
+    content: "";
 }
 
 .countShrink{

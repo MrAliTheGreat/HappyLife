@@ -2,7 +2,6 @@ import { useState } from "react"
 
 import Login from "./components/login"
 import Home from "./components/home"
-import Header from "./components/header"
 import Welcome from "./components/welcome"
 
 function App() {

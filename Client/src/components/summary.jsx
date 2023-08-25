@@ -46,7 +46,7 @@ const summary = () => {
     }
 
     return(
-    <div className={styles.main} style={{background: getMainGradientStyling(remainingCal, totalCal)}} onClick={handleDetail} >
+    <div className={styles.main} style={{background: getMainGradientStyling(remainingCal, totalCal)}} onDoubleClick={handleDetail} >
             <div className={`${styles.count} ${detail === "shrink" ? styles.countShrink : detail === "expand" ? styles.countExpand : ""}`} style={{border: getBorderStyling(remainingCal, totalCal), background: getCircleStyling(remainingCal, totalCal)}}>
                 {remainingCal} / {totalCal}
             </div>

@@ -5,9 +5,11 @@ import {
     LinearScale,
     BarElement,
     Title,
+    Tooltip
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
 import { BarChartOptions } from "../constants/gain";
+import { getDayDate } from "../utils/tools";
 
 import styles from "../styles/gain.module.css"
 
@@ -16,6 +18,7 @@ ChartJS.register(
     LinearScale,
     BarElement,
     Title,
+    Tooltip
 );
 
 const gain = () => {
@@ -77,20 +80,6 @@ const gain = () => {
     const handleGraph = () => {
         graphShow === "show" ? setGraphShow("hide") :
         graphShow === "hide" ? setGraphShow("show") : setGraphShow("show")
-    }
-
-    const getDayDate = () => {
-        const date = new Date().toLocaleDateString(
-            "en-GB",
-            {
-                weekday: "long",
-                year: "numeric",
-                month: "long",
-                day: "numeric"
-            }
-        ).split(",")
-        
-        return `${date[0]} \n ${date[1].trim()}`
     }
 
     return(

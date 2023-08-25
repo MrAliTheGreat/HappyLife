@@ -1,7 +1,7 @@
 export const BarChartOptions = {
     responsive: true,
     maintainAspectRatio: false,
-    backgroundColor: "#ff2222",
+    backgroundColor: "#3bff65",
     borderColor: "#000000",
     borderWidth: 3,
     borderRadius: 10,
@@ -38,7 +38,7 @@ export const BarChartOptions = {
                 display: false
             },
             border: {
-                color: "#ff6666",
+                color: "#b9ffbc",
                 width: 4
             },                
             ticks: {
@@ -55,7 +55,7 @@ export const BarChartOptions = {
                 display: false
             },
             border: {
-                color: "#ff6666",
+                color: "#b9ffbc",
                 width: 4
             },
             ticks: {
