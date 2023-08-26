@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 import styles from "../styles/home.module.css"
 
@@ -11,25 +11,33 @@ import Exercise from "./exercise"
 
 
 const home = () => {
-    const [view, setView] = useState("food") // Change this to panel
-    const [visited, setVisited] = useState({
-        "food" : true, // Change to false
+    const [view, setView] = useState("panel") // Change this to panel
+    const [display, setDisplay] = useState({
+        "panel": false,
+        "food" : false,
         "exercise": false,
     })
 
+    useEffect(() => {
+        const previous = Object.keys(display).filter((key) => display[key])[0]
+        setTimeout(() => {
+            previous ? setDisplay({...display, [view]: true, [previous]: false}) : setDisplay({...display, [view]: true})
+        }, 500) // Synced with fade animation home.module.css
+    }, [view])
+
     return(
         <div className={styles.main}>
-            <Header setView={setView} visited={visited} setVisited={setVisited} />
-            <div className={`${styles.holder} ${view === "panel" ? styles.fadeIn : styles.fadeOut}`} >
+            <Header setView={setView} />
+            <div className={`${styles.holder} ${view === "panel" ? styles.fadeIn : styles.fadeOut} ${display.panel ? "" : styles.start}`} >
                 <Summary />
                 <Gain />
                 <Loss />
             </div>
-            <div className={`${styles.holder} ${!visited.food ? styles.start : view === "food" ? styles.fadeIn : styles.fadeOut}`} >
-                <Food />
+            <div className={`${styles.holder} ${view === "food" ? styles.fadeIn : styles.fadeOut} ${display.food ? "" : styles.start}`} >
+                <Food view={view} />
             </div>
-            <div className={`${styles.holder} ${!visited.exercise ? styles.start : view === "exercise" ? styles.fadeIn : styles.fadeOut}`} >
-                <Exercise />
+            <div className={`${styles.holder} ${view === "exercise" ? styles.fadeIn : styles.fadeOut} ${display.exercise ? "" : styles.start}`} >
+                <Exercise view={view} />
             </div>            
         </div>
     )

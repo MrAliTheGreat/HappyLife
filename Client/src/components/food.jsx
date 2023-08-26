@@ -1,8 +1,8 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 import styles from "../styles/food.module.css"
 
-const food = () => {
+const food = ({ view }) => {
     // This will be food received from backend
     const foods = [
         {
@@ -38,21 +38,37 @@ const food = () => {
     ]
 
     const [drop, setDrop] = useState("")
+    const [chosenFood, setChosenFood] = useState(null)
 
-    // SET drop TO "" ON LEAVE!!!
+    useEffect(() => {
+        setDrop(""); setChosenFood(null)
+    }, [view])
 
     return(
         <div className={styles.main}>
             <div className={styles.dropdown} onClick={() => drop === "show" ? setDrop("hide") : setDrop("show")}>
-                {/* Empty at first then item name */}
+                { 
+                    chosenFood
+                    ? 
+                    <div className={styles.chosenHolder} >
+                        <div className={styles.imageHolder}>
+                            <img className={styles.image} src={chosenFood.path} />
+                        </div>
+                        <div className={styles.name}> {chosenFood.name} </div>
+                    </div>
+                    :
+                    <div className={styles.placeholder}>
+                        What Did You Eat?
+                    </div> 
+                }
                 <div className={`${styles.dropdownMenu} ${drop === "show" ? styles.dropdownMenuOn : drop === "hide" ? styles.dropdownMenuOff : styles.start}`}>
-                    { foods.map(({ id, name, path }) => {
+                    { foods.map((food) => {
                         return(
-                            <div className={styles.dropdownItem} key={id} >
+                            <div className={styles.dropdownItem} key={food.id} onClick={() => setChosenFood(food)} >
                                 <div className={styles.imageHolder}>
-                                    <img className={styles.image} src={path} />
+                                    <img className={styles.image} src={food.path} />
                                 </div>
-                                <div className={styles.name}> {name} </div>
+                                <div className={styles.name}> {food.name} </div>
                             </div>
                         )
                     }) }

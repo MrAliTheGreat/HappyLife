@@ -85,7 +85,6 @@
 
 @keyframes show {
     0%{
-        display: none;
         transform: translateY(140px) scale(0%);
         opacity: 0;
     }
@@ -96,7 +95,6 @@
         opacity: 0.2;
     }
     100%{
-        display: none;
         transform: translateY(90px);
         opacity: 0;
     }
