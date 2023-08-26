@@ -19,6 +19,15 @@
     flex: 1;
 }
 
+.holder:active, .logo:active {
+    opacity: 0.7;
+    transform: translateY(1px)
+}
+
+.holder:hover, .logo:hover {
+    cursor: pointer;
+}
+
 .left {
     justify-content: flex-start;
     padding-left: 5px;

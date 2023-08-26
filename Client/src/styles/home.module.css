@@ -1,28 +1,51 @@
 .main {
+    position: relative;
+}
+
+.holder {
+    position: absolute;
+    width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 10px;
     box-sizing: border-box;
-    animation: homeFade 0.7s ease-in; /* 0.7s sync with header */
 }
 
-@keyframes homeFade {
+.fadeIn {
+    animation: fadeIn 0.7s ease-in-out forwards; /* 0.7s sync with header */
+}
+
+.fadeOut {
+    animation: fadeOut 0.7s ease-in-out forwards; /* 0.7s sync with header */
+}
+
+.start {
+    display: none;
+}
+
+@keyframes fadeIn {
     0%{
         opacity: 0;
     }
 }
 
+@keyframes fadeOut {
+    100%{
+        opacity: 0;
+    }
+}
+
 @media (max-width:900px) {
-    .main {
-        margin-top: 90px;
+    .holder {
+        margin-top: 100px; /* Synced with header height */
         flex-direction: column;
     }
 }
 
 @media (min-width:901px) {
-    .main {
-        margin-top: 200px;
+    .holder {
+        margin-top: 200px; /* Synced with header height */
         flex-direction: row;
     }
 }
