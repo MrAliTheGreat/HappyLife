@@ -21,12 +21,12 @@
 
 .left {
     justify-content: flex-start;
-    padding-left: 10px;
+    padding-left: 5px;
 }
 
 .right {
     justify-content: flex-end;
-    padding-right: 10px;
+    padding-right: 5px;
 }
 
 .logo {
@@ -52,7 +52,7 @@
         width: 100px;
     }
     .image {
-        width: 70px; /* Synced with logo */
+        width: 65px; /* Synced with logo - max 70px */
     }
 }
 
@@ -64,6 +64,6 @@
         width: 150px;
     }
     .image {
-        width: 105px; /* Synced with logo */
+        width: 100px; /* Synced with logo - max 105px */
     }
 }

@@ -18,7 +18,7 @@
 }
 
 .main:active{
-    transform: translate(1px, 1px);
+    box-shadow: #000000 0px 19px 38px, #000000 0px 15px 12px;
 }
 
 .count{
