@@ -72,11 +72,13 @@ const food = ({ view }) => {
         food: "",
         scale: "",
     })
+    const [amount, setAmount] = useState("")
 
     useEffect(() => {
         setDrop({ food: "", scale: "" })
-        setChosen({ food: null, scale: null });
+        setChosen({ food: null, scale: null })
         setSearch({ food: "", scale: "" })
+        setAmount("")
     }, [view])
 
     return(
@@ -154,6 +156,12 @@ const food = ({ view }) => {
                     )
                 }) }
             </div>
+
+            <div className={styles.valueHolder}>
+                <input className={styles.value} placeholder="Amount" value={amount} onChange={(e) => setAmount(e.target.value)} />
+            </div>
+
+            <button className={styles.button}> Submit </button>
         </div>
     )
 }
