@@ -11,7 +11,7 @@ import Exercise from "./exercise"
 
 
 const home = () => {
-    const [view, setView] = useState("panel") // Change this to panel
+    const [view, setView] = useState("food") // Change this to panel
     const [display, setDisplay] = useState({
         "panel": false,
         "food" : false,

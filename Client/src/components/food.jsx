@@ -37,42 +37,122 @@ const food = ({ view }) => {
         },
     ]
 
-    const [drop, setDrop] = useState("")
-    const [chosenFood, setChosenFood] = useState(null)
+    const scales = [
+        {
+            "id": 1,
+            "name": "kg",
+            "path": "/images/Search.png",
+        },
+        {
+            "id": 2,
+            "name": "Serving",
+            "path": "/images/Search.png",
+        },
+        {
+            "id": 3,
+            "name": "Palm",
+            "path": "/images/Search.png",
+        },
+        {
+            "id": 4,
+            "name": "Cups",
+            "path": "/images/Search.png",
+        },        
+    ]
+
+    const [drop, setDrop] = useState({
+        food: "",
+        scale: "",
+    })
+    const [chosen, setChosen] = useState({
+        food: null,
+        scale: null,
+    })
+    const [search, setSearch] = useState({
+        food: "",
+        scale: "",
+    })
 
     useEffect(() => {
-        setDrop(""); setChosenFood(null)
+        setDrop({ food: "", scale: "" })
+        setChosen({ food: null, scale: null });
+        setSearch({ food: "", scale: "" })
     }, [view])
 
     return(
         <div className={styles.main}>
-            <div className={styles.dropdown} onClick={() => drop === "show" ? setDrop("hide") : setDrop("show")}>
+            <div className={styles.dropdown} onClick={() => drop.food === "show" ? setDrop({...drop, food: "hide"}) : setDrop({...drop, food: "show"}) } >
                 { 
-                    chosenFood
+                    chosen.food
                     ? 
                     <div className={styles.chosenHolder} >
-                        <div className={styles.imageHolder}>
-                            <img className={styles.image} src={chosenFood.path} />
+                        <div className={styles.holder}>
+                            <img className={styles.image} src={chosen.food.path} />
                         </div>
-                        <div className={styles.name}> {chosenFood.name} </div>
+                        <div className={styles.name}> {chosen.food.name} </div>
                     </div>
                     :
                     <div className={styles.placeholder}>
                         What Did You Eat?
                     </div> 
-                }
-                <div className={`${styles.dropdownMenu} ${drop === "show" ? styles.dropdownMenuOn : drop === "hide" ? styles.dropdownMenuOff : styles.start}`}>
-                    { foods.map((food) => {
-                        return(
-                            <div className={styles.dropdownItem} key={food.id} onClick={() => setChosenFood(food)} >
-                                <div className={styles.imageHolder}>
-                                    <img className={styles.image} src={food.path} />
-                                </div>
-                                <div className={styles.name}> {food.name} </div>
+                }                
+            </div>
+            <div className={`${styles.dropdownMenu} ${drop.food === "show" ? styles.dropdownMenuOn : drop.food === "hide" ? styles.dropdownMenuOff : styles.start}`}>
+                <div className={styles.search} >
+                    <div className={styles.holder}>
+                        <img className={styles.image} src="/images/Search.png" />
+                    </div>
+                    <div className={`${styles.holder} ${styles.holderExtend}`}>
+                        <input className={styles.input} placeholder="Search Foods" value={search.food} onChange={(e) => setSearch({...search, food: e.target.value})} />
+                    </div>                    
+                </div>                    
+                { foods.filter((food) => food.name.toLocaleLowerCase().includes(search.food.toLocaleLowerCase())).map((food) => {
+                    return(
+                        <div className={styles.dropdownItem} key={food.id} onClick={() => {setChosen({...chosen, food: food}); setDrop({...drop, food: "hide"}); setSearch({...search, food: ""})} } >
+                            <div className={styles.holder}>
+                                <img className={styles.image} src={food.path} />
                             </div>
-                        )
-                    }) }
-                </div>                
+                            <div className={styles.name}> {food.name} </div>
+                        </div>
+                    )
+                }) }
+            </div>
+
+            <div className={`${styles.dropdown} ${styles.secondDropdown}`} onClick={() => drop.scale === "show" ? setDrop({...drop, scale: "hide"}) : setDrop({...drop, scale: "show"})} >
+                { 
+                    chosen.scale
+                    ? 
+                    <div className={styles.chosenHolder} >
+                        <div className={styles.holder}>
+                            <img className={styles.image} src={chosen.scale.path} />
+                        </div>                        
+                        <div className={styles.name}> {chosen.scale.name} </div>
+                    </div>
+                    :
+                    <div className={styles.placeholder}>
+                        What Was The Scale?
+                    </div> 
+                }                
+            </div>
+            <div className={`${styles.dropdownMenu} ${styles.secondDropdownMenu} ${drop.scale === "show" ? styles.dropdownMenuOn : drop.scale === "hide" ? styles.dropdownMenuOff : styles.start}`}>
+                <div className={styles.search} >
+                    <div className={styles.holder}>
+                        <img className={styles.image} src="/images/Search.png" />
+                    </div>
+                    <div className={`${styles.holder} ${styles.holderExtend}`}>
+                        <input className={styles.input} placeholder="Search Scales" value={search.scale} onChange={(e) => setSearch({...search, scale: e.target.value})} />
+                    </div>                    
+                </div>                    
+                { scales.filter((scale) => scale.name.toLocaleLowerCase().includes(search.scale.toLocaleLowerCase())).map((scale) => {
+                    return(
+                        <div className={styles.dropdownItem} key={scale.id} onClick={() => {setChosen({...chosen, scale: scale}); setDrop({...drop, scale: "hide"}); setSearch({...search, scale: ""})} } >
+                            <div className={styles.holder}>
+                                <img className={styles.image} src={scale.path} />
+                            </div>                            
+                            <div className={styles.name}> {scale.name} </div>
+                        </div>
+                    )
+                }) }
             </div>
         </div>
     )
