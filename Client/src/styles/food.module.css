@@ -182,7 +182,7 @@
     /* border: 5px solid pink; */
 }
 
-.search {
+.row {
     display: flex;
     align-items: center;
     width: 100%;
