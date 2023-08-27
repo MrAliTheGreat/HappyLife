@@ -63,40 +63,46 @@ const food = ({ view }) => {
     const cals = [
         {
             "id": 1,
-            "name": "Lifting",
-            "scale": "kg",
+            "foodName": "Lifting",
+            "scaleName": "kg",
             "cal": 200,
         },
         {
             "id": 2,
-            "name": "Cycling",
-            "scale": "kg",
+            "foodName": "Cycling",
+            "scaleName": "kg",
             "cal": 500,
         },
         {
             "id": 3,
-            "name": "Jump Rope",
-            "scale": "Palm",
+            "foodName": "Jump Rope",
+            "scaleName": "Palm",
             "cal": 40,
         },
         {
             "id": 4,
-            "name": "Swimming",
-            "scale": "Cups",
+            "foodName": "Swimming",
+            "scaleName": "Cups",
             "cal": 60,
         },
         {
             "id": 5,
-            "name": "Push Ups",
-            "scale": "Cups",
+            "foodName": "Push Ups",
+            "scaleName": "Cups",
             "cal": 1000,
         },
         {
             "id": 6,
-            "name": "Tennis",
-            "scale": "Serving",
+            "foodName": "Tennis",
+            "scaleName": "Serving",
             "cal": 300,
-        },        
+        },  
+        {
+            "id": 7,
+            "foodName": "Swimming",
+            "scaleName": "Palm",
+            "cal": 400,
+        },              
     ]
 
     const [drop, setDrop] = useState({
@@ -185,6 +191,43 @@ const food = ({ view }) => {
         null
     }
 
+    // THIS (SELECTION) CAN BE PLACED ON THE BACKEND AND HANDLED WITH GRAPHQL!!!
+    const getFilteredItems = (option) => {
+        if(option === "food"){
+            return (
+                foods.filter( (food) => {
+                    return(
+                        food.name.toLocaleLowerCase().includes(search.food.toLocaleLowerCase()) && (
+                        chosen.scale ? 
+                        cals.filter(({ foodName, scaleName }) => {
+                            return foodName === food.name && scaleName === chosen.scale.name
+                        }).length > 0 : true )            
+                    )
+                } )
+            )
+        }
+        return (
+            scales.filter( (scale) => {
+                return (
+                    scale.name.toLocaleLowerCase().includes(search.scale.toLocaleLowerCase()) && (
+                    chosen.food ? 
+                    cals.filter(({ foodName, scaleName }) => {
+                        return scaleName === scale.name && foodName === chosen.food.name 
+                    }).length > 0 : true )            
+                )
+            } )
+        )        
+    }
+
+    const handleCaloriesValue = () => {
+        return (
+            (newItem.food || (newItem.scale && chosen.food)) ? 
+            newItem.cal : 
+            chosen.food && chosen.scale && amount ?
+            cals.filter(({ foodName, scaleName }) => chosen.food.name === foodName && chosen.scale.name === scaleName)[0].cal * parseInt(amount) : ""
+        )
+    }
+
     // TO DO
     // id is set by backend
     // add mechanisim for clearing chosen
@@ -235,7 +278,7 @@ const food = ({ view }) => {
                     </div>                    
                 </div>                
                 {
-                    foods.filter( (food) => food.name.toLocaleLowerCase().includes(search.food.toLocaleLowerCase()) ).map((food) => {
+                    getFilteredItems("food").map((food) => {
                         return(
                             <div className={styles.dropdownItem} key={food.id} onClick={() => { handleSelect("food", food, null) }} >
                                 <div className={styles.holder}>
@@ -291,7 +334,7 @@ const food = ({ view }) => {
                     </div>                    
                 </div>                
                 {
-                    scales.filter( (scale) => scale.name.toLocaleLowerCase().includes(search.scale.toLocaleLowerCase()) ).map((scale) => {
+                    getFilteredItems("scale").map((scale) => {
                         return(
                             <div className={styles.dropdownItem} key={scale.id} onClick={() => { handleSelect("scale", null, scale) } } >
                                 <div className={styles.holder}>
@@ -318,13 +361,13 @@ const food = ({ view }) => {
                 <input 
                     className={styles.value}
                     placeholder="Calories"
-                    value={newItem.food || (newItem.scale && chosen.food) ? newItem.cal : "Cal from DB"}
+                    value={handleCaloriesValue()}
                     readOnly={newItem.food || (newItem.scale && chosen.food) ? null : "readonly"}
                     onChange={(e) => setNewItem({...newItem, cal: e.target.value}) } 
                 />
             </div>            
 
-            <button className={styles.button} onClick={() => {console.log(chosen); console.log(newItem)} }>
+            <button className={styles.button} onClick={() => {console.log(chosen); console.log(newItem); console.log(getFilteredItems("scale"))} }>
                 {newItem.food || (newItem.scale && chosen.food) ? "Add To List" : "Submit"}
             </button>
         </div>

@@ -1,5 +1,8 @@
 import styles from "../styles/header.module.css"
 
+// TO DO
+// Make clickable after animation is done!
+
 const header = ({ setView }) => {
     return(
         <div className={styles.main}>
