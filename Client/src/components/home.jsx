@@ -27,7 +27,7 @@ const home = () => {
 
     return(
         <div className={styles.main}>
-            <Header setView={setView} />
+            <Header view={view} setView={setView} />
             <div className={`${styles.holder} ${view === "panel" ? styles.fadeIn : styles.fadeOut} ${display.panel ? "" : styles.start}`} >
                 <Summary />
                 <Gain />
