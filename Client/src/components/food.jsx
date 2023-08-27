@@ -60,6 +60,45 @@ const food = ({ view }) => {
         },        
     ]
 
+    const cals = [
+        {
+            "id": 1,
+            "name": "Lifting",
+            "scale": "kg",
+            "cal": 200,
+        },
+        {
+            "id": 2,
+            "name": "Cycling",
+            "scale": "kg",
+            "cal": 500,
+        },
+        {
+            "id": 3,
+            "name": "Jump Rope",
+            "scale": "Palm",
+            "cal": 40,
+        },
+        {
+            "id": 4,
+            "name": "Swimming",
+            "scale": "Cups",
+            "cal": 60,
+        },
+        {
+            "id": 5,
+            "name": "Push Ups",
+            "scale": "Cups",
+            "cal": 1000,
+        },
+        {
+            "id": 6,
+            "name": "Tennis",
+            "scale": "Serving",
+            "cal": 300,
+        },        
+    ]
+
     const [drop, setDrop] = useState({
         food: "",
         scale: "",
@@ -87,18 +126,72 @@ const food = ({ view }) => {
         setAmount("")
     }, [view])
 
-    const handleChosen = (scale) => {
-        setChosen({...chosen, scale: scale});
+    const handleSelect = (option, food, scale) => {
+        if(option === "food"){
+            setChosen({...chosen, food})
+            setDrop({...drop, food: "hide"})
+            setSearch({...search, food: ""})
+            return
+        }
+        setChosen({...chosen, scale});
         setDrop({...drop, scale: "hide"});
-        setSearch({...search, scale: ""});
+        setSearch({...search, scale: ""});        
     }
 
+    const handleDropDown = (option) => {
+        if(option === "food"){
+            drop.food === "show" ? 
+            setDrop({...drop, food: "hide"}) : 
+            setDrop({...drop, food: "show"})
+            return
+        }
+        drop.scale === "show" ?
+        setDrop({...drop, scale: "hide"}) :
+        setDrop({...drop, scale: "show"})
+    }
+
+    const getDropDownMenuClass = (option) => {
+        if(option === "food"){
+            return (
+                drop.food === "show" ? 
+                styles.dropdownMenuOn : 
+                drop.food === "hide" ? 
+                styles.dropdownMenuOff : 
+                styles.start            
+            )
+        }
+        return (
+            drop.scale === "show" ?
+            styles.dropdownMenuOn :
+            drop.scale === "hide" ?
+            styles.dropdownMenuOff :
+            styles.start            
+        )
+    }
+
+    const handleNewItem = (option, e) => {
+        if(option === "food"){
+            setNewItem({...newItem, food: e.target.value})
+            e.target.value ?
+            setChosen({...chosen, food: { id: 0, name: e.target.value, path: "/images/New.png" } }) :
+            setChosen({...chosen, food: null })
+            return
+        }
+        setNewItem({...newItem, scale: e.target.value})
+        chosen.food ?
+        e.target.value ?
+        setChosen({...chosen, scale: {id: 0, name: e.target.value, path: "/images/New.png"} }) :
+        setChosen({...chosen, scale: null }) :
+        null
+    }
+
+    // TO DO
     // id is set by backend
     // add mechanisim for clearing chosen
 
     return(
         <div className={styles.main}>
-            <div className={styles.dropdown} onClick={() => drop.food === "show" ? setDrop({...drop, food: "hide"}) : setDrop({...drop, food: "show"}) } >
+            <div className={styles.dropdown} onClick={ () => handleDropDown("food") } >
                 { 
                     chosen.food
                     ? 
@@ -114,13 +207,18 @@ const food = ({ view }) => {
                     </div> 
                 }                
             </div>
-            <div className={`${styles.dropdownMenu} ${drop.food === "show" ? styles.dropdownMenuOn : drop.food === "hide" ? styles.dropdownMenuOff : styles.start}`}>
+            <div className={`${styles.dropdownMenu} ${getDropDownMenuClass("food")}`}>
                 <div className={styles.row} >
                     <div className={styles.holder}>
                         <img className={styles.image} src="/images/Search.png" />
                     </div>
                     <div className={`${styles.holder} ${styles.holderExtend}`}>
-                        <input className={styles.input} placeholder="Search Foods" value={search.food} onChange={(e) => setSearch({...search, food: e.target.value})} />
+                        <input 
+                            className={styles.input}
+                            placeholder="Search Foods"
+                            value={search.food}
+                            onChange={(e) => setSearch({...search, food: e.target.value})}
+                        />
                     </div>
                 </div>
                 <div className={styles.row} >
@@ -128,22 +226,29 @@ const food = ({ view }) => {
                         <img className={styles.image} src="/images/Missing.png" />
                     </div>
                     <div className={`${styles.holder} ${styles.holderExtend}`}>
-                        <input className={styles.input} placeholder="New Food Name?" value={newItem.food} onChange={(e) => {setNewItem({...newItem, food: e.target.value}); setChosen({...chosen, food: {id: 0, name: e.target.value, path: "/images/New.png"} }) } } />
+                        <input
+                            className={styles.input}
+                            placeholder="New Food Name?"
+                            value={newItem.food}
+                            onChange={ (e) => handleNewItem("food", e) }
+                        />
                     </div>                    
                 </div>                
-                { foods.filter((food) => food.name.toLocaleLowerCase().includes(search.food.toLocaleLowerCase())).map((food) => {
-                    return(
-                        <div className={styles.dropdownItem} key={food.id} onClick={() => {setChosen({...chosen, food: food}); setDrop({...drop, food: "hide"}); setSearch({...search, food: ""})} } >
-                            <div className={styles.holder}>
-                                <img className={styles.image} src={food.path} />
+                {
+                    foods.filter( (food) => food.name.toLocaleLowerCase().includes(search.food.toLocaleLowerCase()) ).map((food) => {
+                        return(
+                            <div className={styles.dropdownItem} key={food.id} onClick={() => { handleSelect("food", food, null) }} >
+                                <div className={styles.holder}>
+                                    <img className={styles.image} src={food.path} />
+                                </div>
+                                <div className={styles.name}> {food.name} </div>
                             </div>
-                            <div className={styles.name}> {food.name} </div>
-                        </div>
-                    )
-                }) }
+                        )
+                    })
+                }
             </div>
 
-            <div className={`${styles.dropdown} ${styles.secondDropdown}`} onClick={() => drop.scale === "show" ? setDrop({...drop, scale: "hide"}) : setDrop({...drop, scale: "show"})} >
+            <div className={`${styles.dropdown} ${styles.secondDropdown}`} onClick={() => handleDropDown("scale")} >
                 { 
                     chosen.scale
                     ? 
@@ -159,13 +264,18 @@ const food = ({ view }) => {
                     </div> 
                 }                
             </div>
-            <div className={`${styles.dropdownMenu} ${styles.secondDropdownMenu} ${drop.scale === "show" ? styles.dropdownMenuOn : drop.scale === "hide" ? styles.dropdownMenuOff : styles.start}`}>
+            <div className={`${styles.dropdownMenu} ${styles.secondDropdownMenu} ${getDropDownMenuClass("scale")}`}>
                 <div className={styles.row} >
                     <div className={styles.holder}>
                         <img className={styles.image} src="/images/Search.png" />
                     </div>
                     <div className={`${styles.holder} ${styles.holderExtend}`}>
-                        <input className={styles.input} placeholder="Search Scales" value={search.scale} onChange={(e) => setSearch({...search, scale: e.target.value})} />
+                        <input 
+                            className={styles.input}
+                            placeholder="Search Scales"
+                            value={search.scale}
+                            onChange={(e) => setSearch({...search, scale: e.target.value})}
+                        />
                     </div>                    
                 </div>
                 <div className={styles.row} >
@@ -173,30 +283,50 @@ const food = ({ view }) => {
                         <img className={styles.image} src="/images/Missing.png" />
                     </div>
                     <div className={`${styles.holder} ${styles.holderExtend}`}>
-                        <input className={styles.input} placeholder="New Scale Name?" value={newItem.scale} onChange={(e) => {setNewItem({...newItem, scale: e.target.value}); chosen.food ? setChosen({...chosen, scale: {id: 0, name: e.target.value, path: "/images/New.png"} }) : null } } />
+                        <input
+                            className={styles.input}
+                            placeholder="New Scale Name?"
+                            value={newItem.scale}
+                            onChange={(e) => { handleNewItem("scale", e) } } />
                     </div>                    
                 </div>                
-                { scales.filter((scale) => scale.name.toLocaleLowerCase().includes(search.scale.toLocaleLowerCase())).map((scale) => {
-                    return(
-                        <div className={styles.dropdownItem} key={scale.id} onClick={() => { handleChosen(scale) } } >
-                            <div className={styles.holder}>
-                                <img className={styles.image} src={scale.path} />
-                            </div>                            
-                            <div className={styles.name}> {scale.name} </div>
-                        </div>
-                    )
-                }) }
+                {
+                    scales.filter( (scale) => scale.name.toLocaleLowerCase().includes(search.scale.toLocaleLowerCase()) ).map((scale) => {
+                        return(
+                            <div className={styles.dropdownItem} key={scale.id} onClick={() => { handleSelect("scale", null, scale) } } >
+                                <div className={styles.holder}>
+                                    <img className={styles.image} src={scale.path} />
+                                </div>                            
+                                <div className={styles.name}> {scale.name} </div>
+                            </div>
+                        )
+                    })
+                }
             </div>
 
             <div className={styles.valueHolder}>
-                <input className={styles.value} placeholder="Amount" value={newItem.food || (newItem.scale && chosen.food) ? 1 : amount} readOnly={newItem.food || (newItem.scale && chosen.food) ? "readonly" : null} onChange={(e) => setAmount(e.target.value)} />
+                <input
+                    className={styles.value}
+                    placeholder="Amount"
+                    value={newItem.food || (newItem.scale && chosen.food) ? 1 : amount}
+                    readOnly={newItem.food || (newItem.scale && chosen.food) ? "readonly" : null}
+                    onChange={(e) => setAmount(e.target.value)} 
+                />
             </div>
 
             <div className={styles.valueHolder}>
-                <input className={styles.value} placeholder="Calories" value={newItem.food || (newItem.scale && chosen.food) ? newItem.cal : "Cal from DB"} readOnly={newItem.food || (newItem.scale && chosen.food) ? null : "readonly"} onChange={(e) => setNewItem({...newItem, cal: e.target.value}) } />
+                <input 
+                    className={styles.value}
+                    placeholder="Calories"
+                    value={newItem.food || (newItem.scale && chosen.food) ? newItem.cal : "Cal from DB"}
+                    readOnly={newItem.food || (newItem.scale && chosen.food) ? null : "readonly"}
+                    onChange={(e) => setNewItem({...newItem, cal: e.target.value}) } 
+                />
             </div>            
 
-            <button className={styles.button} onClick={() => {console.log(chosen); console.log(newItem)} }> {newItem.food || (newItem.scale && chosen.food) ? "Add To List" : "Submit"} </button>
+            <button className={styles.button} onClick={() => {console.log(chosen); console.log(newItem)} }>
+                {newItem.food || (newItem.scale && chosen.food) ? "Add To List" : "Submit"}
+            </button>
         </div>
     )
 }
