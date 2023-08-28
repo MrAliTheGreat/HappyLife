@@ -106,70 +106,70 @@ const food = ({ view }) => {
     ]
 
     const [drop, setDrop] = useState({
-        food: "",
-        scale: "",
+        foodName: "",
+        scaleName: "",
     })
     const [chosen, setChosen] = useState({
         food: null,
         scale: null,
     })
     const [search, setSearch] = useState({
-        food: "",
-        scale: "",
+        foodName: "",
+        scaleName: "",
     })
     const [newItem, setNewItem] = useState({
-        food: "",
-        scale: "",
+        foodName: "",
+        scaleName: "",
         cal: "",
     })
     const [amount, setAmount] = useState("")
 
     useEffect(() => {
-        setDrop({ food: "", scale: "" })
+        setDrop({ foodName: "", scaleName: "" })
         setChosen({ food: null, scale: null })
-        setSearch({ food: "", scale: "" })
-        setNewItem({ food: "", scale: "", cal: "" })
+        setSearch({ foodName: "", scaleName: "" })
+        setNewItem({ foodName: "", scaleName: "", cal: "" })
         setAmount("")
     }, [view])
 
     const handleSelect = (option, food, scale) => {
         if(option === "food"){
             setChosen({...chosen, food})
-            setDrop({...drop, food: "hide"})
-            setSearch({...search, food: ""})
+            setDrop({...drop, foodName: "hide"})
+            setSearch({...search, foodName: ""})
             return
         }
         setChosen({...chosen, scale});
-        setDrop({...drop, scale: "hide"});
-        setSearch({...search, scale: ""});        
+        setDrop({...drop, scaleName: "hide"});
+        setSearch({...search, scaleName: ""});        
     }
 
     const handleDropDown = (option) => {
         if(option === "food"){
-            drop.food === "show" ? 
-            setDrop({...drop, food: "hide"}) : 
-            setDrop({...drop, food: "show"})
+            drop.foodName === "show" ? 
+            setDrop({...drop, foodName: "hide"}) : 
+            setDrop({...drop, foodName: "show"})
             return
         }
-        drop.scale === "show" ?
-        setDrop({...drop, scale: "hide"}) :
-        setDrop({...drop, scale: "show"})
+        drop.scaleName === "show" ?
+        setDrop({...drop, scaleName: "hide"}) :
+        setDrop({...drop, scaleName: "show"})
     }
 
     const getDropDownMenuClass = (option) => {
         if(option === "food"){
             return (
-                drop.food === "show" ? 
+                drop.foodName === "show" ? 
                 styles.dropdownMenuOn : 
-                drop.food === "hide" ? 
+                drop.foodName === "hide" ? 
                 styles.dropdownMenuOff : 
                 styles.start            
             )
         }
         return (
-            drop.scale === "show" ?
+            drop.scaleName === "show" ?
             styles.dropdownMenuOn :
-            drop.scale === "hide" ?
+            drop.scaleName === "hide" ?
             styles.dropdownMenuOff :
             styles.start            
         )
@@ -177,13 +177,13 @@ const food = ({ view }) => {
 
     const handleNewItem = (option, e) => {
         if(option === "food"){
-            setNewItem({...newItem, food: e.target.value})
+            setNewItem({...newItem, foodName: e.target.value})
             e.target.value ?
             setChosen({...chosen, food: { id: 0, name: e.target.value, path: "/images/New.png" } }) :
             setChosen({...chosen, food: null })
             return
         }
-        setNewItem({...newItem, scale: e.target.value})
+        setNewItem({...newItem, scaleName: e.target.value})
         chosen.food ?
         e.target.value ?
         setChosen({...chosen, scale: {id: 0, name: e.target.value, path: "/images/New.png"} }) :
@@ -197,7 +197,7 @@ const food = ({ view }) => {
             return (
                 foods.filter( (food) => {
                     return(
-                        food.name.toLocaleLowerCase().includes(search.food.toLocaleLowerCase()) && (
+                        food.name.toLocaleLowerCase().includes(search.foodName.toLocaleLowerCase()) && (
                         chosen.scale ? 
                         cals.filter(({ foodName, scaleName }) => {
                             return foodName === food.name && scaleName === chosen.scale.name
@@ -209,7 +209,7 @@ const food = ({ view }) => {
         return (
             scales.filter( (scale) => {
                 return (
-                    scale.name.toLocaleLowerCase().includes(search.scale.toLocaleLowerCase()) && (
+                    scale.name.toLocaleLowerCase().includes(search.scaleName.toLocaleLowerCase()) && (
                     chosen.food ? 
                     cals.filter(({ foodName, scaleName }) => {
                         return scaleName === scale.name && foodName === chosen.food.name 
@@ -221,16 +221,20 @@ const food = ({ view }) => {
 
     const handleCaloriesValue = () => {
         return (
-            (newItem.food || (newItem.scale && chosen.food)) ? 
+            (newItem.foodName || (newItem.scaleName && chosen.food)) ? 
             newItem.cal : 
             chosen.food && chosen.scale && amount ?
             cals.filter(({ foodName, scaleName }) => chosen.food.name === foodName && chosen.scale.name === scaleName)[0].cal * parseInt(amount) : ""
         )
     }
 
+    const handleSubmit = () => {
+
+    }
+
     // TO DO
     // id is set by backend
-    // add mechanisim for clearing chosen
+    // add mechanisim for clearing chosen ==> Is it necessary though?
 
     return(
         <div className={styles.main}>
@@ -259,8 +263,8 @@ const food = ({ view }) => {
                         <input 
                             className={styles.input}
                             placeholder="Search Foods"
-                            value={search.food}
-                            onChange={(e) => setSearch({...search, food: e.target.value})}
+                            value={search.foodName}
+                            onChange={(e) => setSearch({...search, foodName: e.target.value})}
                         />
                     </div>
                 </div>
@@ -272,7 +276,7 @@ const food = ({ view }) => {
                         <input
                             className={styles.input}
                             placeholder="New Food Name?"
-                            value={newItem.food}
+                            value={newItem.foodName}
                             onChange={ (e) => handleNewItem("food", e) }
                         />
                     </div>                    
@@ -316,8 +320,8 @@ const food = ({ view }) => {
                         <input 
                             className={styles.input}
                             placeholder="Search Scales"
-                            value={search.scale}
-                            onChange={(e) => setSearch({...search, scale: e.target.value})}
+                            value={search.scaleName}
+                            onChange={(e) => setSearch({...search, scaleName: e.target.value})}
                         />
                     </div>                    
                 </div>
@@ -329,7 +333,7 @@ const food = ({ view }) => {
                         <input
                             className={styles.input}
                             placeholder="New Scale Name?"
-                            value={newItem.scale}
+                            value={newItem.scaleName}
                             onChange={(e) => { handleNewItem("scale", e) } } />
                     </div>                    
                 </div>                
@@ -351,8 +355,8 @@ const food = ({ view }) => {
                 <input
                     className={styles.value}
                     placeholder="Amount"
-                    value={newItem.food || (newItem.scale && chosen.food) ? 1 : amount}
-                    readOnly={newItem.food || (newItem.scale && chosen.food) ? "readonly" : null}
+                    value={newItem.foodName || (newItem.scaleName && chosen.food) ? 1 : amount}
+                    readOnly={newItem.foodName || (newItem.scaleName && chosen.food) ? "readonly" : null}
                     onChange={(e) => setAmount(e.target.value)} 
                 />
             </div>
@@ -362,13 +366,13 @@ const food = ({ view }) => {
                     className={styles.value}
                     placeholder="Calories"
                     value={handleCaloriesValue()}
-                    readOnly={newItem.food || (newItem.scale && chosen.food) ? null : "readonly"}
+                    readOnly={newItem.foodName || (newItem.scaleName && chosen.food) ? null : "readonly"}
                     onChange={(e) => setNewItem({...newItem, cal: e.target.value}) } 
                 />
             </div>            
 
-            <button className={styles.button} onClick={() => {console.log(chosen); console.log(newItem); console.log(getFilteredItems("scale"))} }>
-                {newItem.food || (newItem.scale && chosen.food) ? "Add To List" : "Submit"}
+            <button className={styles.button} onClick={ handleSubmit }>
+                {newItem.foodName || (newItem.scaleName && chosen.food) ? "Add To List" : "Submit"}
             </button>
         </div>
     )
