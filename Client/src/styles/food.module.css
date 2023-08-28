@@ -213,6 +213,10 @@
     display: none;
 }
 
+.wiggle {
+    animation: wiggle 0.5s linear;
+}
+
 @keyframes slideIn {
     0%{
         opacity: 0;
@@ -249,6 +253,20 @@
     }    
 }
 
+@keyframes wiggle {
+    20%{
+        transform: translateX(20px);
+    }
+    40%{
+        transform: translateX(-20px);
+    }
+    60%{
+        transform: translateX(10px);
+    }
+    80%{
+        transform: translateX(-10px);
+    }    
+}
 
 @media (max-width:900px) {
     .dropdown, .dropdownMenu, .valueHolder, .button {

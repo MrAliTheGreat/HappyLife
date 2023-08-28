@@ -122,6 +122,12 @@ const food = ({ view }) => {
         scaleName: "",
         cal: "",
     })
+    const [shake, setShake] = useState({
+        food: false,
+        scale: false,
+        amount: false,
+        calories: false,
+    })
     const [amount, setAmount] = useState("")
 
     useEffect(() => {
@@ -129,6 +135,7 @@ const food = ({ view }) => {
         setChosen({ food: null, scale: null })
         setSearch({ foodName: "", scaleName: "" })
         setNewItem({ foodName: "", scaleName: "", cal: "" })
+        setShake({ food: false, scale: false, amount: false, calories: false })
         setAmount("")
     }, [view])
 
@@ -151,9 +158,14 @@ const food = ({ view }) => {
             setDrop({...drop, foodName: "show"})
             return
         }
-        drop.scaleName === "show" ?
-        setDrop({...drop, scaleName: "hide"}) :
-        setDrop({...drop, scaleName: "show"})
+        
+        if(drop.scaleName === "show"){
+            setDrop({...drop, scaleName: "hide"});
+            setShake({...shake, food:false})
+        }
+        else{
+            setDrop({...drop, scaleName: "show"})
+        }
     }
 
     const getDropDownMenuClass = (option) => {
@@ -178,9 +190,13 @@ const food = ({ view }) => {
     const handleNewItem = (option, e) => {
         if(option === "food"){
             setNewItem({...newItem, foodName: e.target.value})
-            e.target.value ?
-            setChosen({...chosen, food: { id: 0, name: e.target.value, path: "/images/New.png" } }) :
+            if(e.target.value){
+                setChosen({...chosen, food: { id: 0, name: e.target.value, path: "/images/New.png" } })
+                setAmount("1")
+                return
+            }
             setChosen({...chosen, food: null })
+            setAmount("")
             return
         }
         setNewItem({...newItem, scaleName: e.target.value})
@@ -188,7 +204,7 @@ const food = ({ view }) => {
         e.target.value ?
         setChosen({...chosen, scale: {id: 0, name: e.target.value, path: "/images/New.png"} }) :
         setChosen({...chosen, scale: null }) :
-        null
+        setShake({...shake, food: e.target.value !== ""})
     }
 
     // THIS (SELECTION) CAN BE PLACED ON THE BACKEND AND HANDLED WITH GRAPHQL!!!
@@ -197,7 +213,7 @@ const food = ({ view }) => {
             return (
                 foods.filter( (food) => {
                     return(
-                        food.name.toLocaleLowerCase().includes(search.foodName.toLocaleLowerCase()) && (
+                        food.name.toLocaleLowerCase().includes(search.foodName.toLocaleLowerCase().trim()) && (
                         chosen.scale ? 
                         cals.filter(({ foodName, scaleName }) => {
                             return foodName === food.name && scaleName === chosen.scale.name
@@ -209,8 +225,8 @@ const food = ({ view }) => {
         return (
             scales.filter( (scale) => {
                 return (
-                    scale.name.toLocaleLowerCase().includes(search.scaleName.toLocaleLowerCase()) && (
-                    chosen.food ? 
+                    scale.name.toLocaleLowerCase().includes(search.scaleName.toLocaleLowerCase().trim()) && (
+                    chosen.food && !newItem.foodName ? 
                     cals.filter(({ foodName, scaleName }) => {
                         return scaleName === scale.name && foodName === chosen.food.name 
                     }).length > 0 : true )            
@@ -228,17 +244,29 @@ const food = ({ view }) => {
         )
     }
 
-    const handleSubmit = () => {
+    const checkMustShake = (val) => {
+        return !(val.trim() === val && !isNaN(val) && val > 0 && parseFloat(val) === parseInt(val))
+    }
 
+    const handleSubmit = () => {
+        setShake({
+            food: !chosen.food,
+            scale: !chosen.scale,
+            amount: checkMustShake(amount),
+            calories: newItem.foodName ? checkMustShake(newItem.cal) : false,
+        })
+        setTimeout(() => {
+            setShake({ food: false, scale: false, amount: false, calories: false })
+        }, 500) // Synced with wiggle in food.module.css
     }
 
     // TO DO
     // id is set by backend
-    // add mechanisim for clearing chosen ==> Is it necessary though?
+    // add mechanisim for clearing chosen
 
     return(
         <div className={styles.main}>
-            <div className={styles.dropdown} onClick={ () => handleDropDown("food") } >
+            <div className={`${styles.dropdown} ${shake.food ? styles.wiggle : ""}`} onClick={ () => handleDropDown("food") } >
                 { 
                     chosen.food
                     ? 
@@ -295,7 +323,7 @@ const food = ({ view }) => {
                 }
             </div>
 
-            <div className={`${styles.dropdown} ${styles.secondDropdown}`} onClick={() => handleDropDown("scale")} >
+            <div className={`${styles.dropdown} ${styles.secondDropdown} ${shake.scale ? styles.wiggle : ""}`} onClick={() => handleDropDown("scale")} >
                 { 
                     chosen.scale
                     ? 
@@ -351,17 +379,17 @@ const food = ({ view }) => {
                 }
             </div>
 
-            <div className={styles.valueHolder}>
+            <div className={`${styles.valueHolder} ${shake.amount ? styles.wiggle : ""}`}>
                 <input
                     className={styles.value}
                     placeholder="Amount"
-                    value={newItem.foodName || (newItem.scaleName && chosen.food) ? 1 : amount}
+                    value={amount}
                     readOnly={newItem.foodName || (newItem.scaleName && chosen.food) ? "readonly" : null}
                     onChange={(e) => setAmount(e.target.value)} 
                 />
             </div>
 
-            <div className={styles.valueHolder}>
+            <div className={`${styles.valueHolder} ${shake.calories ? styles.wiggle : ""}`}>
                 <input 
                     className={styles.value}
                     placeholder="Calories"
