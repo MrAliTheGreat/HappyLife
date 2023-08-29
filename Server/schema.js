@@ -8,6 +8,13 @@ const typeDefs = `
     type Query {
         all: [Food!]!
     }
+
+    type Mutation {
+        addFood(
+            name: String!
+            path: String!
+        ): Food
+    }
 `
 
 module.exports = typeDefs

@@ -5,6 +5,12 @@ const resolvers = {
         all: async () => {
             return Food.find({})
         }
+    },
+    Mutation: {
+        addFood: async (_, args) => {
+            const food = new Food({...args})
+            return food.save()
+        }
     }
 }
 
