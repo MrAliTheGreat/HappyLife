@@ -19,14 +19,15 @@ const login = ({ setRender }) => {
 
     const handleLogin = () => {
         // Checking credentials in the database
-        // What happens if no one is found?
-        
-        setEnter(false)
-        setTimeout(() => {
-            setRender("welcome")
-        }, 1000)
-
-        setUsername(""); setPassword("")
+        // What happens if no one is found? ==> JUST PRE-DEFINED USERS FOR NOW!!!
+        if(!answer){
+            setEnter(false)
+            setTimeout(() => {
+                setRender("welcome")
+            }, 1000)
+    
+            setUsername(""); setPassword("")
+        }
     }
 
     return(
