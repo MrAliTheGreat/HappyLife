@@ -129,6 +129,8 @@ const food = ({ view }) => {
         calories: false,
     })
     const [amount, setAmount] = useState("")
+    const [clear, setClear] = useState(false)
+    const [submit, setSubmit] = useState(false)
 
     useEffect(() => {
         setDrop({ foodName: "", scaleName: "" })
@@ -137,6 +139,8 @@ const food = ({ view }) => {
         setNewItem({ foodName: "", scaleName: "", cal: "" })
         setShake({ food: false, scale: false, amount: false, calories: false })
         setAmount("")
+        setClear(false)
+        setSubmit(false)
     }, [view])
 
     const handleSelect = (option, food, scale) => {
@@ -154,17 +158,23 @@ const food = ({ view }) => {
     const handleDropDown = (option) => {
         if(option === "food"){
             drop.foodName === "show" ? 
-            setDrop({...drop, foodName: "hide"}) : 
-            setDrop({...drop, foodName: "show"})
+            setDrop({...drop, foodName: "hide"}) :
+            setDrop({
+                foodName: "show",
+                scaleName: drop.scaleName ? "hide" : drop.scaleName
+            })
             return
         }
         
         if(drop.scaleName === "show"){
-            setDrop({...drop, scaleName: "hide"});
+            setDrop({...drop, scaleName: "hide"})
             setShake({...shake, food:false})
         }
         else{
-            setDrop({...drop, scaleName: "show"})
+            setDrop({
+                foodName: drop.foodName ? "hide" : drop.foodName,
+                scaleName: "show"
+            })
         }
     }
 
@@ -249,23 +259,48 @@ const food = ({ view }) => {
     }
 
     const handleSubmit = () => {
+        setSubmit(true)
         setShake({
             food: !chosen.food,
             scale: !chosen.scale,
             amount: checkMustShake(amount),
-            calories: newItem.foodName ? checkMustShake(newItem.cal) : false,
+            calories: newItem.foodName && checkMustShake(newItem.cal),
         })
         setTimeout(() => {
+            setSubmit(false)
             setShake({ food: false, scale: false, amount: false, calories: false })
-        }, 500) // Synced with wiggle in food.module.css
+        }, 800) // Synced with wiggle in food.module.css
+
+
+        
+        if(chosen.food && chosen.scale && !checkMustShake(amount) && !(newItem.foodName && checkMustShake(newItem.cal))){
+            setChosen({ food: null, scale: null })
+            setSearch({ foodName: "", scaleName: "" })
+            setNewItem({ foodName: "", scaleName: "", cal: "" })
+            setAmount("")
+        }        
+    }
+
+    const handleClear = () => {
+        setClear(true)
+        setTimeout(() => {
+            setClear(false)
+        }, 1000) // Synced with swing in food.module.css
+
+        setChosen({ food: null, scale: null })
+        setNewItem({ foodName: "", scaleName: "", cal: "" })
+        setAmount("")
+    }
+
+    const isSubmitted = () => {
+        return submit && !Object.values(shake).some(v => v)
     }
 
     // TO DO
     // id is set by backend
-    // add mechanisim for clearing chosen
 
     return(
-        <div className={styles.main}>
+        <div className={`${styles.main} ${clear ? styles.swing : ""}`}>
             <div className={`${styles.dropdown} ${shake.food ? styles.wiggle : ""}`} onClick={ () => handleDropDown("food") } >
                 { 
                     chosen.food
@@ -397,11 +432,18 @@ const food = ({ view }) => {
                     readOnly={newItem.foodName || (newItem.scaleName && chosen.food) ? null : "readonly"}
                     onChange={(e) => setNewItem({...newItem, cal: e.target.value}) } 
                 />
-            </div>            
+            </div>
 
-            <button className={styles.button} onClick={ handleSubmit }>
-                {newItem.foodName || (newItem.scaleName && chosen.food) ? "Add To List" : "Submit"}
+            <button className={`${styles.button} ${ isSubmitted() ? styles.submit : "" }`} onClick={ handleSubmit }>
+                {newItem.foodName || (newItem.scaleName && chosen.food) ? "Add To List" : isSubmitted() ? "OK!" : "Submit"}
             </button>
+
+            <div className={`${styles.holder} ${styles.trash}`} onClick={ handleClear }>
+                <img
+                    width="70px" 
+                    src="/images/Trash.png"
+                />
+            </div>
         </div>
     )
 }
