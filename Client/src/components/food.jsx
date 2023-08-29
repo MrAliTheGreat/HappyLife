@@ -168,7 +168,7 @@ const food = ({ view }) => {
         
         if(drop.scaleName === "show"){
             setDrop({...drop, scaleName: "hide"})
-            setShake({...shake, food:false})
+            setShake({...shake, food: false})
         }
         else{
             setDrop({
@@ -313,7 +313,7 @@ const food = ({ view }) => {
                     </div>
                     :
                     <div className={styles.placeholder}>
-                        What Did You Eat?
+                        Food?
                     </div> 
                 }                
             </div>
@@ -370,7 +370,7 @@ const food = ({ view }) => {
                     </div>
                     :
                     <div className={styles.placeholder}>
-                        What Was The Scale?
+                        Scale?
                     </div> 
                 }                
             </div>
