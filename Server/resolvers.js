@@ -2,7 +2,7 @@ const { GraphQLError } = require('graphql')
 
 const Food = require("./models/food")
 const Exercise = require("./models/exercise")
-
+const User = require("./models/user")
 
 const getName = (name, newChar) => {
     return name.split(" ").map(word => word.charAt(0).toUpperCase() + word.substring(1)).join(newChar)
@@ -21,6 +21,9 @@ const resolvers = {
         },
         allExerciseScales: async (_, args) => {
             return Exercise.find({ name: args.name })
+        },
+        allUsers: async () => {
+            return User.find({})
         },
     },
     Mutation: {
@@ -63,7 +66,23 @@ const resolvers = {
                 })
             }
             return exercise
-        },        
+        },
+        addUser: async (_, args) => {
+            const user = new User({...args})
+            try{
+                await user.save()
+            }
+            catch(err){
+                throw new GraphQLError("User Already Exists!", {
+                    extensions: {
+                        code: "BAD_USER_INPUT",
+                        invalidArgs: args,
+                        err
+                    }
+                })
+            }
+            return user
+        },
     }
 }
 
