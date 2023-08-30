@@ -77,6 +77,10 @@ const typeDefs = `
         allUsers: [User!]!
 
         currentUserInfo: UserInfo
+
+        userFoods: [UserFood]!
+
+        userExercises: [UserExercise]!
     }
 
     type Mutation {

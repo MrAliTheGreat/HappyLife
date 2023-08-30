@@ -103,6 +103,36 @@ const resolvers = {
                 history: currentUser.history
             }
         },
+        userFoods: (...[, , { currentUser }]) => {
+            if(!currentUser){
+                throw new GraphQLError("Access Denied!", {
+                    extensions: {
+                        code: "ACCESS_DENIED",
+                    }
+                })
+            }
+
+            return currentUser.foods.map((food) => {
+                if(food.date === getDayDate()){
+                    return food
+                }
+            })
+        },
+        userExercises: (...[, , { currentUser }]) => {
+            if(!currentUser){
+                throw new GraphQLError("Access Denied!", {
+                    extensions: {
+                        code: "ACCESS_DENIED",
+                    }
+                })
+            }
+
+            return currentUser.exercises.map((exercise) => {
+                if(exercise.date === getDayDate()){
+                    return exercise
+                }
+            })
+        },        
         // allUsers: async () => {
         //     return User.find({}).populate({
         //         path: "foods",
