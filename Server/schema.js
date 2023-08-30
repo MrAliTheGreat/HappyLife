@@ -2,17 +2,23 @@ const typeDefs = `
     type Food {
         id: ID!
         name: String!
+        scale: String!
+        calories: Int!
         path: String!
     }
 
     type Query {
-        all: [Food!]!
+        allFoods: [Food!]!
+        allFoodScales(
+            name: String!
+        ): [Food!]!
     }
 
     type Mutation {
         addFood(
             name: String!
-            path: String!
+            scale: String!
+            calories: Int!
         ): Food
     }
 `
