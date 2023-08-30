@@ -27,8 +27,17 @@ const resolvers = {
             return User.find({})
         },
         userHistory: async (_, args) => {
-            const user = await User.findOne({ username: args.username })
+            const user = await User.findOne({ username: args.username }) // From Context!
             return user.history
+        },
+        userFoods: async (_, args) => {
+            const user = await User.findOne({ username: args.username }).populate({
+                path: "foods",
+                populate: {
+                    path: "food"
+                }
+            }) // From Context!
+            return user.foods
         }
     },
     Mutation: {
@@ -90,7 +99,7 @@ const resolvers = {
         },
         addHistory: async (_, args) => {
             // We can update history whenever the user adds food or exercise to his or her account!
-            const user = await User.findOne({ username: args.username })
+            const user = await User.findOne({ username: args.username }) // username must be received from context!!!
             user.history = user.history.concat({
                 date: getDayDate(),
                 gain: args.gain,
@@ -98,6 +107,23 @@ const resolvers = {
             })
             await user.save()
             return user
+        },
+        addUserFood: async (_, args) => {
+            const user = await User.findOne({ username: args.username }) // username must be received from context!!!
+            console.log(user)
+            const food = await Food.findOne({ name: args.foodname, scale: args.scalename })
+            user.foods = user.foods.concat({
+                food,
+                amount: args.amount,
+                calories: args.amount * food.calories
+            })
+            await user.save()
+            return user.populate({
+                path: "foods",
+                populate: {
+                    path: "food"
+                }
+            })
         },
     }
 }

@@ -27,16 +27,26 @@ const schema = mongoose.Schema({
         required: true,
     },
     foods: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Food",
+        food: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Food",
+        },
         amount: {
+            type: Number
+        },
+        calories: {
             type: Number
         }
     }],
     exercises: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Exercise",
+        exercise: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Exercise",            
+        },
         amount: {
+            type: Number
+        },
+        calories: {
             type: Number
         }
     }],
