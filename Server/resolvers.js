@@ -5,12 +5,54 @@ const jwt = require("jsonwebtoken")
 const Food = require("./models/food")
 const Exercise = require("./models/exercise")
 const User = require("./models/user")
+const typeDefs = require("./schema")
 const { getDayDate, getName, getBMR, getStreak } = require("./utils/tools")
 
 const LOSS_RATE = 1000
 
 // remainingCals = totalCals - history.gain ==> For frontend!
-// From frontend call addHistory first then gain and loss will be updated and we can do whatever we want!
+
+
+const _addHistory = async (_, args, { currentUser }) => {
+    if(!currentUser){
+        throw new GraphQLError("Access Denied!", {
+            extensions: {
+                code: "ACCESS_DENIED",
+            }
+        })
+    }
+
+    if(currentUser.history.at(-1).date === getDayDate()){
+        currentUser.history = currentUser.history.map((hist) => {
+            if(hist.date === getDayDate()){
+                return {
+                    date: getDayDate(),
+                    gain: hist.gain + args.gain,
+                    loss: hist.loss + args.loss                            
+                }
+            }
+            return hist
+        })
+    }
+    else{
+        currentUser.history = currentUser.history.concat({
+            date: getDayDate(),
+            gain: args.gain,
+            loss: args.loss
+        })
+    }
+
+    await currentUser.save()
+    return {
+        username: currentUser.username,
+        totalCals: getBMR(currentUser.sex, currentUser.weight, currentUser.height, currentUser.age) + currentUser.history.at(-1).loss - LOSS_RATE,
+        streak: getStreak(currentUser.history, currentUser.sex, currentUser.weight, currentUser.height, currentUser.age, LOSS_RATE),
+        foods: currentUser.foods,
+        exercises: currentUser.exercises,
+        history: currentUser.history
+    }
+}
+
 const resolvers = {
     Query: {
         allFoods: async () => {
@@ -54,7 +96,7 @@ const resolvers = {
 
             return {
                 username: currentUser.username,
-                totalCals: getBMR(currentUser.sex, currentUser.weight, currentUser.height, currentUser.age) + currentUser.history.loss - LOSS_RATE,
+                totalCals: getBMR(currentUser.sex, currentUser.weight, currentUser.height, currentUser.age) + currentUser.history.at(-1).loss - LOSS_RATE,
                 streak: getStreak(currentUser.history, currentUser.sex, currentUser.weight, currentUser.height, currentUser.age, LOSS_RATE),
                 foods: currentUser.foods,
                 exercises: currentUser.exercises,
@@ -136,7 +178,12 @@ const resolvers = {
             const passwordHash = await bcrypt.hash(args.password, 10)
 
             const user = new User({...args,
-                password: passwordHash
+                password: passwordHash,
+                history: {
+                    date: getDayDate(),
+                    gain: 0,
+                    loss: 0
+                }
             })
 
             try{
@@ -153,52 +200,14 @@ const resolvers = {
             }
             return {
                 username: user.username,
-                totalCals: getBMR(user.sex, user.weight, user.height, user.age) + user.history.loss - LOSS_RATE,
+                totalCals: getBMR(user.sex, user.weight, user.height, user.age) + user.history.at(-1).loss - LOSS_RATE,
                 streak: getStreak(user.history, user.sex, user.weight, user.height, user.age, LOSS_RATE),
                 foods: user.foods,
                 exercises: user.exercises,
                 history: user.history
             }
         },
-        addHistory: async (_, args, { currentUser }) => {
-            if(!currentUser){
-                throw new GraphQLError("Access Denied!", {
-                    extensions: {
-                        code: "ACCESS_DENIED",
-                    }
-                })
-            }
-
-            if(currentUser.history.at(-1).date === getDayDate()){
-                currentUser.history = currentUser.history.map((hist) => {
-                    if(hist.date === getDayDate()){
-                        return {
-                            date: getDayDate(),
-                            gain: hist.gain + args.gain,
-                            loss: hist.loss + args.loss                            
-                        }
-                    }
-                    return hist
-                })
-            }
-            else{
-                currentUser.history = currentUser.history.concat({
-                    date: getDayDate(),
-                    gain: args.gain,
-                    loss: args.loss
-                })
-            }
-
-            await currentUser.save()
-            return {
-                username: currentUser.username,
-                totalCals: getBMR(currentUser.sex, currentUser.weight, currentUser.height, currentUser.age) + currentUser.history.loss - LOSS_RATE,
-                streak: getStreak(currentUser.history, currentUser.sex, currentUser.weight, currentUser.height, currentUser.age, LOSS_RATE),
-                foods: currentUser.foods,
-                exercises: currentUser.exercises,
-                history: currentUser.history
-            }
-        },
+        addHistory: _addHistory,
         addUserFood: async (_, args, { currentUser }) => {
             if(!currentUser){
                 throw new GraphQLError("Access Denied!", {
@@ -225,9 +234,12 @@ const resolvers = {
                 date: getDayDate()
             })
             await currentUser.save()
+
+            await _addHistory(null, { gain: args.amount * food.calories, loss: 0 }, { currentUser }) // Awesome line of code! --> Call a query within a query
+
             return {
                 username: currentUser.username,
-                totalCals: getBMR(currentUser.sex, currentUser.weight, currentUser.height, currentUser.age) + currentUser.history.loss - LOSS_RATE,
+                totalCals: getBMR(currentUser.sex, currentUser.weight, currentUser.height, currentUser.age) + currentUser.history.at(-1).loss - LOSS_RATE,
                 streak: getStreak(currentUser.history, currentUser.sex, currentUser.weight, currentUser.height, currentUser.age, LOSS_RATE),
                 foods: currentUser.foods,
                 exercises: currentUser.exercises,
@@ -260,9 +272,12 @@ const resolvers = {
                 date: getDayDate()
             })
             await currentUser.save()
+
+            await _addHistory(null, { gain: 0, loss: args.amount * exercise.calories }, { currentUser }) // Awesome line of code! --> Call a query within a query            
+
             return {
                 username: currentUser.username,
-                totalCals: getBMR(currentUser.sex, currentUser.weight, currentUser.height, currentUser.age) + currentUser.history.loss - LOSS_RATE,
+                totalCals: getBMR(currentUser.sex, currentUser.weight, currentUser.height, currentUser.age) + currentUser.history.at(-1).loss - LOSS_RATE,
                 streak: getStreak(currentUser.history, currentUser.sex, currentUser.weight, currentUser.height, currentUser.age, LOSS_RATE),
                 foods: currentUser.foods,
                 exercises: currentUser.exercises,
