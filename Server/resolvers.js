@@ -3,11 +3,9 @@ const { GraphQLError } = require('graphql')
 const Food = require("./models/food")
 const Exercise = require("./models/exercise")
 const User = require("./models/user")
-const getDayDate = require("./utils/tools")
+const {getDayDate} = require("./utils/tools")
 
-const getName = (name, newChar) => {
-    return name.split(" ").map(word => word.charAt(0).toUpperCase() + word.substring(1)).join(newChar)
-}
+// getName must be used in front-end when sending data to backend!!!
 
 const resolvers = {
     Query: {
@@ -15,13 +13,31 @@ const resolvers = {
             return Food.find({})
         },
         allFoodScales: async (_, args) => {
-            return Food.find({ name: args.name })
+            const food = await Food.find({ name: args.name })
+            if(!food){
+                throw new GraphQLError("Food Not Found!", {
+                    extensions: {
+                        code: "FOOD_NOT_FOUND",
+                        invalidArgs: args.name,
+                    }
+                })                
+            }
+            return food
         },
         allExercises: async () => {
             return Exercise.find({})
         },
         allExerciseScales: async (_, args) => {
-            return Exercise.find({ name: args.name })
+            const exercise = await Exercise.find({ name: args.name })
+            if(!exercise){
+                throw new GraphQLError("Exercise Not Found!", {
+                    extensions: {
+                        code: "EXERCISE_NOT_FOUND",
+                        invalidArgs: args.name,
+                    }
+                })                
+            }
+            return exercise
         },
         allUsers: async () => {
             return User.find({})
@@ -42,11 +58,7 @@ const resolvers = {
     },
     Mutation: {
         addFood: async (_, args) => {
-            const food = new Food({...args, 
-                name: getName(args.name, " "),
-                scale: getName(args.scale, " "),
-                path: `/images/${getName(args.name, "")}.png`
-            })
+            const food = new Food({...args, path: `/images/${args.name}.png`})
             try{
                 await food.save()
             }
@@ -62,11 +74,7 @@ const resolvers = {
             return food
         },
         addExercise: async (_, args) => {
-            const exercise = new Exercise({...args,
-                name: getName(args.name, " "),
-                scale: getName(args.scale, " "),
-                path: `/animations/${getName(args.name, "")}.gif`
-            })
+            const exercise = new Exercise({...args, path: `/animations/${args.name}.gif`})
             try{
                 await exercise.save()
             }
@@ -99,7 +107,7 @@ const resolvers = {
         },
         addHistory: async (_, args) => {
             // We can update history whenever the user adds food or exercise to his or her account!
-            const user = await User.findOne({ username: args.username }) // username must be received from context!!!
+            const user = await User.findOne({ username: args.username }) // From context!!!
             user.history = user.history.concat({
                 date: getDayDate(),
                 gain: args.gain,
@@ -109,9 +117,17 @@ const resolvers = {
             return user
         },
         addUserFood: async (_, args) => {
-            const user = await User.findOne({ username: args.username }) // username must be received from context!!!
-            console.log(user)
+            const user = await User.findOne({ username: args.username }) // From context!!!            
             const food = await Food.findOne({ name: args.foodname, scale: args.scalename })
+            if(!food) {
+                throw new GraphQLError("Food Not Found!", {
+                    extensions: {
+                        code: "Food_NOT_FOUND",
+                        invalidArgs: args,
+                    }
+                })                
+            }
+
             user.foods = user.foods.concat({
                 food,
                 amount: args.amount,
