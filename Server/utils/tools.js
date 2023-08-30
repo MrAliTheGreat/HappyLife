@@ -24,4 +24,14 @@ const getBMR = (sex, weight, height, age) => {
     return Math.floor(BMR)
 }
 
-module.exports = { getDayDate, getName, getBMR }
+const getStreak = (history, sex, weight, height, age, LOSS_RATE) => {
+    const BMR = getBMR(sex, weight, height, age)
+    let streak = 0
+    history.map((hist) => {
+        BMR - LOSS_RATE + hist.loss - hist.gain > 0 ? streak += 1 : streak = 0
+    })
+    return streak
+}
+
+
+module.exports = { getDayDate, getName, getBMR, getStreak }

@@ -38,17 +38,20 @@ const typeDefs = `
         food: Food!
         amount: Int!
         calories: Int!
+        date: String!        
     }
 
     type UserExercise {
         exercise: Exercise!
         amount: Int!
         calories: Int!
+        date: String!
     }
 
     type UserInfo {
         username: String!
-        BMR: Int!
+        totalCals: Int!
+        streak: Int!
         foods: [UserFood]!
         exercises: [UserExercise]!
         history: [History]!        

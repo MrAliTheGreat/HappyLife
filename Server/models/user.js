@@ -36,7 +36,10 @@ const schema = mongoose.Schema({
         },
         calories: {
             type: Number
-        }
+        },
+        date: {
+            type: String
+        },
     }],
     exercises: [{
         exercise: {
@@ -48,7 +51,10 @@ const schema = mongoose.Schema({
         },
         calories: {
             type: Number
-        }
+        },
+        date: {
+            type: String
+        },
     }],
     history: [{
         date: {

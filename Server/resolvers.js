@@ -5,8 +5,12 @@ const jwt = require("jsonwebtoken")
 const Food = require("./models/food")
 const Exercise = require("./models/exercise")
 const User = require("./models/user")
-const { getDayDate, getName, getBMR } = require("./utils/tools")
+const { getDayDate, getName, getBMR, getStreak } = require("./utils/tools")
 
+const LOSS_RATE = 1000
+
+// remainingCals = totalCals - history.gain ==> For frontend!
+// From frontend call addHistory first then gain and loss will be updated and we can do whatever we want!
 const resolvers = {
     Query: {
         allFoods: async () => {
@@ -50,7 +54,8 @@ const resolvers = {
 
             return {
                 username: currentUser.username,
-                BMR: getBMR(currentUser.sex, currentUser.weight, currentUser.height, currentUser.age),
+                totalCals: getBMR(currentUser.sex, currentUser.weight, currentUser.height, currentUser.age) + currentUser.history.loss - LOSS_RATE,
+                streak: getStreak(currentUser.history, currentUser.sex, currentUser.weight, currentUser.height, currentUser.age, LOSS_RATE),
                 foods: currentUser.foods,
                 exercises: currentUser.exercises,
                 history: currentUser.history
@@ -148,14 +153,14 @@ const resolvers = {
             }
             return {
                 username: user.username,
-                BMR: getBMR(user.sex, user.weight, user.height, user.age),
+                totalCals: getBMR(user.sex, user.weight, user.height, user.age) + user.history.loss - LOSS_RATE,
+                streak: getStreak(user.history, user.sex, user.weight, user.height, user.age, LOSS_RATE),
                 foods: user.foods,
                 exercises: user.exercises,
                 history: user.history
             }
         },
         addHistory: async (_, args, { currentUser }) => {
-            // We can update history whenever the user adds food or exercise to his or her account!
             if(!currentUser){
                 throw new GraphQLError("Access Denied!", {
                     extensions: {
@@ -187,7 +192,8 @@ const resolvers = {
             await currentUser.save()
             return {
                 username: currentUser.username,
-                BMR: getBMR(currentUser.sex, currentUser.weight, currentUser.height, currentUser.age),
+                totalCals: getBMR(currentUser.sex, currentUser.weight, currentUser.height, currentUser.age) + currentUser.history.loss - LOSS_RATE,
+                streak: getStreak(currentUser.history, currentUser.sex, currentUser.weight, currentUser.height, currentUser.age, LOSS_RATE),
                 foods: currentUser.foods,
                 exercises: currentUser.exercises,
                 history: currentUser.history
@@ -215,12 +221,14 @@ const resolvers = {
             currentUser.foods = currentUser.foods.concat({
                 food,
                 amount: args.amount,
-                calories: args.amount * food.calories
+                calories: args.amount * food.calories,
+                date: getDayDate()
             })
             await currentUser.save()
             return {
                 username: currentUser.username,
-                BMR: getBMR(currentUser.sex, currentUser.weight, currentUser.height, currentUser.age),
+                totalCals: getBMR(currentUser.sex, currentUser.weight, currentUser.height, currentUser.age) + currentUser.history.loss - LOSS_RATE,
+                streak: getStreak(currentUser.history, currentUser.sex, currentUser.weight, currentUser.height, currentUser.age, LOSS_RATE),
                 foods: currentUser.foods,
                 exercises: currentUser.exercises,
                 history: currentUser.history
@@ -242,18 +250,20 @@ const resolvers = {
                         code: "EXERCISE_NOT_FOUND",
                         invalidArgs: args,
                     }
-                })                
+                })
             }
 
             currentUser.exercises = currentUser.exercises.concat({
                 exercise,
                 amount: args.amount,
-                calories: args.amount * exercise.calories
+                calories: args.amount * exercise.calories,
+                date: getDayDate()
             })
             await currentUser.save()
             return {
                 username: currentUser.username,
-                BMR: getBMR(currentUser.sex, currentUser.weight, currentUser.height, currentUser.age),
+                totalCals: getBMR(currentUser.sex, currentUser.weight, currentUser.height, currentUser.age) + currentUser.history.loss - LOSS_RATE,
+                streak: getStreak(currentUser.history, currentUser.sex, currentUser.weight, currentUser.height, currentUser.age, LOSS_RATE),
                 foods: currentUser.foods,
                 exercises: currentUser.exercises,
                 history: currentUser.history
