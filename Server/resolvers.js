@@ -164,11 +164,26 @@ const resolvers = {
                 })
             }
 
-            currentUser.history = currentUser.history.concat({
-                date: getDayDate(),
-                gain: args.gain,
-                loss: args.loss
-            })
+            if(currentUser.history.at(-1).date === getDayDate()){
+                currentUser.history = currentUser.history.map((hist) => {
+                    if(hist.date === getDayDate()){
+                        return {
+                            date: getDayDate(),
+                            gain: hist.gain + args.gain,
+                            loss: hist.loss + args.loss                            
+                        }
+                    }
+                    return hist
+                })
+            }
+            else{
+                currentUser.history = currentUser.history.concat({
+                    date: getDayDate(),
+                    gain: args.gain,
+                    loss: args.loss
+                })
+            }
+
             await currentUser.save()
             return {
                 username: currentUser.username,
