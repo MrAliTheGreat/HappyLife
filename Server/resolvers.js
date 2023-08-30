@@ -1,11 +1,11 @@
-const { GraphQLError } = require('graphql')
+const { GraphQLError } = require("graphql")
+const bcrypt = require("bcrypt")
+const jwt = require("jsonwebtoken")
 
 const Food = require("./models/food")
 const Exercise = require("./models/exercise")
 const User = require("./models/user")
-const {getDayDate} = require("./utils/tools")
-
-// getName must be used in front-end when sending data to backend!!!
+const { getDayDate, getName, getBMR } = require("./utils/tools")
 
 const resolvers = {
     Query: {
@@ -39,26 +39,53 @@ const resolvers = {
             }
             return exercise
         },
-        allUsers: async () => {
-            return User.find({})
+        currentUserInfo: (...[, , { currentUser }]) => {
+            if(!currentUser){
+                throw new GraphQLError("Access Denied!", {
+                    extensions: {
+                        code: "ACCESS_DENIED",
+                    }
+                })
+            }
+
+            return {
+                username: currentUser.username,
+                BMR: getBMR(currentUser.sex, currentUser.weight, currentUser.height, currentUser.age),
+                foods: currentUser.foods,
+                exercises: currentUser.exercises,
+                history: currentUser.history
+            }
         },
-        userHistory: async (_, args) => {
-            const user = await User.findOne({ username: args.username }) // From Context!
-            return user.history
-        },
-        userFoods: async (_, args) => {
-            const user = await User.findOne({ username: args.username }).populate({
-                path: "foods",
-                populate: {
-                    path: "food"
-                }
-            }) // From Context!
-            return user.foods
-        }
+        // allUsers: async () => {
+        //     return User.find({}).populate({
+        //         path: "foods",
+        //         populate: {
+        //             path: "food"
+        //         }
+        //     })
+        //     .populate({
+        //         path: "exercises",
+        //         populate: {
+        //             path: "exercise"
+        //         }
+        //     })
+        // },        
     },
     Mutation: {
-        addFood: async (_, args) => {
-            const food = new Food({...args, path: `/images/${args.name}.png`})
+        addFood: async (_, args, { currentUser }) => {
+            if(!currentUser){
+                throw new GraphQLError("Access Denied!", {
+                    extensions: {
+                        code: "ACCESS_DENIED",
+                    }
+                })
+            }
+
+            const food = new Food({...args,
+                name: getName(args.name, " "),
+                scale: getName(args.scale, " "),
+                path: `/images/${getName(args.name, "")}.png`
+            })
             try{
                 await food.save()
             }
@@ -73,8 +100,19 @@ const resolvers = {
             }
             return food
         },
-        addExercise: async (_, args) => {
-            const exercise = new Exercise({...args, path: `/animations/${args.name}.gif`})
+        addExercise: async (_, args, { currentUser }) => {
+            if(!currentUser){
+                throw new GraphQLError("Access Denied!", {
+                    extensions: {
+                        code: "ACCESS_DENIED",
+                    }
+                })
+            }
+
+            const exercise = new Exercise({...args, 
+                name: getName(args.name, " "),
+                scale: getName(args.scale, " "),                
+                path: `/animations/${getName(args.name, "")}.gif`})
             try{
                 await exercise.save()
             }
@@ -90,7 +128,12 @@ const resolvers = {
             return exercise
         },
         addUser: async (_, args) => {
-            const user = new User({...args})
+            const passwordHash = await bcrypt.hash(args.password, 10)
+
+            const user = new User({...args,
+                password: passwordHash
+            })
+
             try{
                 await user.save()
             }
@@ -103,43 +146,134 @@ const resolvers = {
                     }
                 })
             }
-            return user
+            return {
+                username: user.username,
+                BMR: getBMR(user.sex, user.weight, user.height, user.age),
+                foods: user.foods,
+                exercises: user.exercises,
+                history: user.history
+            }
         },
-        addHistory: async (_, args) => {
+        addHistory: async (_, args, { currentUser }) => {
             // We can update history whenever the user adds food or exercise to his or her account!
-            const user = await User.findOne({ username: args.username }) // From context!!!
-            user.history = user.history.concat({
+            if(!currentUser){
+                throw new GraphQLError("Access Denied!", {
+                    extensions: {
+                        code: "ACCESS_DENIED",
+                    }
+                })
+            }
+
+            currentUser.history = currentUser.history.concat({
                 date: getDayDate(),
                 gain: args.gain,
                 loss: args.loss
             })
-            await user.save()
-            return user
+            await currentUser.save()
+            return {
+                username: currentUser.username,
+                BMR: getBMR(currentUser.sex, currentUser.weight, currentUser.height, currentUser.age),
+                foods: currentUser.foods,
+                exercises: currentUser.exercises,
+                history: currentUser.history
+            }
         },
-        addUserFood: async (_, args) => {
-            const user = await User.findOne({ username: args.username }) // From context!!!            
+        addUserFood: async (_, args, { currentUser }) => {
+            if(!currentUser){
+                throw new GraphQLError("Access Denied!", {
+                    extensions: {
+                        code: "ACCESS_DENIED",
+                    }
+                })
+            }            
+           
             const food = await Food.findOne({ name: args.foodname, scale: args.scalename })
             if(!food) {
                 throw new GraphQLError("Food Not Found!", {
                     extensions: {
-                        code: "Food_NOT_FOUND",
+                        code: "FOOD_NOT_FOUND",
                         invalidArgs: args,
                     }
                 })                
             }
 
-            user.foods = user.foods.concat({
+            currentUser.foods = currentUser.foods.concat({
                 food,
                 amount: args.amount,
                 calories: args.amount * food.calories
             })
-            await user.save()
-            return user.populate({
-                path: "foods",
-                populate: {
-                    path: "food"
-                }
+            await currentUser.save()
+            return {
+                username: currentUser.username,
+                BMR: getBMR(currentUser.sex, currentUser.weight, currentUser.height, currentUser.age),
+                foods: currentUser.foods,
+                exercises: currentUser.exercises,
+                history: currentUser.history
+            }
+        },
+        addUserExercise: async (_, args, { currentUser }) => {
+            if(!currentUser){
+                throw new GraphQLError("Access Denied!", {
+                    extensions: {
+                        code: "ACCESS_DENIED",
+                    }
+                })
+            }
+
+            const exercise = await Exercise.findOne({ name: args.exercisename, scale: args.scalename })
+            if(!exercise) {
+                throw new GraphQLError("Exercise Not Found!", {
+                    extensions: {
+                        code: "EXERCISE_NOT_FOUND",
+                        invalidArgs: args,
+                    }
+                })                
+            }
+
+            currentUser.exercises = currentUser.exercises.concat({
+                exercise,
+                amount: args.amount,
+                calories: args.amount * exercise.calories
             })
+            await currentUser.save()
+            return {
+                username: currentUser.username,
+                BMR: getBMR(currentUser.sex, currentUser.weight, currentUser.height, currentUser.age),
+                foods: currentUser.foods,
+                exercises: currentUser.exercises,
+                history: currentUser.history
+            }
+        },
+        login: async (_, args) => {
+            const user = await User.findOne({ username: args.username })
+            if(!user){
+                throw new GraphQLError("Invalid Credentials!", {
+                    extensions: {
+                        code: "INVALID_CREDENTIALS",
+                        invalidArgs: args.username,
+                    }
+                })
+            }
+
+            const pass = await bcrypt.compare(args.password, user.password)
+            if(!pass){
+                throw new GraphQLError("Invalid Credentials!", {
+                    extensions: {
+                        code: "INVALID_CREDENTIALS",
+                        invalidArgs: args.username,
+                    }
+                })
+            }            
+
+            return {
+                value: jwt.sign(
+                    {
+                        id: user.id,
+                        username: user.username,
+                    },
+                    process.env.JWT_SECRET
+                )
+            }
         },
     }
 }

@@ -16,4 +16,12 @@ const getName = (name, newChar) => {
     return name.split(" ").map(word => word.charAt(0).toUpperCase() + word.substring(1)).join(newChar)
 }
 
-module.exports = {getDayDate, getName}
+const getBMR = (sex, weight, height, age) => {
+    const BMR = sex.toLowerCase() === "male" ? 
+        (10 * weight) + (6.25 * height) - (5 * age) + 5 :
+        (10 * weight) + (6.25 * height) - (5 * age) - 161
+    
+    return Math.floor(BMR)
+}
+
+module.exports = { getDayDate, getName, getBMR }
