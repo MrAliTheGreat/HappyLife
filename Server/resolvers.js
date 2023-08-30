@@ -3,6 +3,7 @@ const { GraphQLError } = require('graphql')
 const Food = require("./models/food")
 const Exercise = require("./models/exercise")
 const User = require("./models/user")
+const getDayDate = require("./utils/tools")
 
 const getName = (name, newChar) => {
     return name.split(" ").map(word => word.charAt(0).toUpperCase() + word.substring(1)).join(newChar)
@@ -25,6 +26,10 @@ const resolvers = {
         allUsers: async () => {
             return User.find({})
         },
+        userHistory: async (_, args) => {
+            const user = await User.findOne({ username: args.username })
+            return user.history
+        }
     },
     Mutation: {
         addFood: async (_, args) => {
@@ -81,6 +86,17 @@ const resolvers = {
                     }
                 })
             }
+            return user
+        },
+        addHistory: async (_, args) => {
+            // We can update history whenever the user adds food or exercise to his or her account!
+            const user = await User.findOne({ username: args.username })
+            user.history = user.history.concat({
+                date: getDayDate(),
+                gain: args.gain,
+                loss: args.loss
+            })
+            await user.save()
             return user
         },
     }

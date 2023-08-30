@@ -36,14 +36,22 @@ const typeDefs = `
 
     type Query {
         allFoods: [Food!]!
+
         allFoodScales(
             name: String!
         ): [Food!]!
+
         allExercises: [Exercise!]!
+
         allExerciseScales(
             name: String!
         ): [Exercise!]!
+
         allUsers: [User!]!
+
+        userHistory(
+            username: String!
+        ) : [History]!
     }
 
     type Mutation {
@@ -52,11 +60,13 @@ const typeDefs = `
             scale: String!
             calories: Int!
         ): Food
+
         addExercise(
             name: String!
             scale: String!
             calories: Int!
         ): Exercise
+
         addUser(
             username: String!
             password: String!
@@ -64,6 +74,12 @@ const typeDefs = `
             weight: Int!
             age: Int!
             sex: String!
+        ): User
+
+        addHistory(
+            username: String!
+            gain: Int!
+            loss: Int!
         ): User
     }
 `
