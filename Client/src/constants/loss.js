@@ -65,7 +65,8 @@ export const BarChartOptions = {
                     weight: "normal",
                     size: 13,
                 }
-            }                
+            },
+            max: 5000,               
         }
     }
 }

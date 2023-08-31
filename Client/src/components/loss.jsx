@@ -9,7 +9,7 @@ import {
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
 import { BarChartOptions } from "../constants/loss";
-import { getDayDate } from "../utils/tools";
+import { getDayDate, getGraphVals } from "../utils/tools";
 
 import styles from "../styles/loss.module.css"
 
@@ -23,45 +23,6 @@ ChartJS.register(
 
 
 const loss = ({ user }) => {
-    const loss = [
-        {
-            "id": 1,
-            "name": "Lifting",
-            "path": "/animations/Lift.gif",
-            "cal": "700"
-        },
-        {
-            "id": 2,
-            "name": "Cycling",
-            "path": "/animations/Cycling.gif",
-            "cal": "1000"
-        },
-        {
-            "id": 3,
-            "name": "Jump Rope",
-            "path": "/animations/JumpRope.gif",
-            "cal": "6000"
-        },
-        {
-            "id": 4,
-            "name": "Swimming",
-            "path": "/animations/FrogStroke.gif",
-            "cal": "400"
-        },
-        {
-            "id": 5,
-            "name": "Push Ups",
-            "path": "/animations/PushUp.gif",
-            "cal": "500"
-        },
-        {
-            "id": 6,
-            "name": "Tennis",
-            "path": "/animations/Tennis.gif",
-            "cal": "5000"
-        },
-    ]
-
     const [graphShow, setGraphShow] = useState("")
 
     const handleGraph = () => {
@@ -79,14 +40,14 @@ const loss = ({ user }) => {
                 </div>
                 <div className={styles.list}>
                     {
-                        loss.map(( {id, name, path, cal} ) => {
+                        user.exercises.map(( { calories, exercise } ) => {
                             return(
-                                <div key={id} className={styles.row}>
+                                <div key={ exercise.id } className={styles.row}>
                                     <div className={styles.imageHolder}>
-                                        <img className={styles.image} src={path} />
+                                        <img className={styles.image} src={ exercise.path } />
                                     </div>
-                                    <div className={styles.name}> {name} </div>
-                                    <div className={styles.cal}> {cal} </div>
+                                    <div className={styles.name}> { exercise.name } </div>
+                                    <div className={styles.cal}> { calories } </div>
                                 </div>
                             )
                         })
@@ -100,7 +61,7 @@ const loss = ({ user }) => {
                         {
                             labels: ["Sat", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri"],
                             datasets: [{
-                                data: [700, 100, 900, 0, 2000, 800, 300],
+                                data: getGraphVals(user.history, "loss"),
                             }]
                         }                        
                     }

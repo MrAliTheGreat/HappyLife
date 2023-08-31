@@ -9,7 +9,7 @@ import {
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
 import { BarChartOptions } from "../constants/gain";
-import { getDayDate } from "../utils/tools";
+import { getDayDate, getGraphVals } from "../utils/tools";
 
 import styles from "../styles/gain.module.css"
 
@@ -21,24 +21,6 @@ ChartJS.register(
     Tooltip
 );
 
-
-const getGraphVals = (history) => {
-    let vals = [0, 0, 0, 0, 0, 0, 0]
-    const numPreviousDays = {
-        "Sat": 0,
-        "Sun": 1,
-        "Mon": 2,
-        "Tue": 3,
-        "Wed": 4,
-        "Thu": 5,
-        "Fri": 6
-    }
-    const pos = numPreviousDays[history.at(-1).date.slice(0, 3)]
-    for(let i = pos; i >= 0; i--) {
-        vals[i] = history.at(-1 - pos + i) ? history.at(-1 - pos + i).gain : 0
-    }
-    return vals
-}
 
 const gain = ({ user }) => {
     const [graphShow, setGraphShow] = useState("")
@@ -79,7 +61,7 @@ const gain = ({ user }) => {
                         {
                             labels: ["Sat", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri"],
                             datasets: [{
-                                data: getGraphVals(user.history),
+                                data: getGraphVals(user.history, "gain"),
                             }]
                         }                        
                     }
