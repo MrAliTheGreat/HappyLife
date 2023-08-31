@@ -27,21 +27,29 @@ startStandaloneServer(server, {
         port: 4000
     },
     context: async ({ req, _ }) => {
+        let valid = true;
         const auth = req ? req.headers.authorization : null
         if(auth && auth.startsWith("Bearer ")){
-            const decodedToken = jwt.verify(auth.substring(7), process.env.JWT_SECRET)
-            const currentUser = await User.findById(decodedToken.id).populate({
-                path: "foods",
-                populate: {
-                    path: "food"
-                }
-            }).populate({
-                path: "exercises",
-                populate: {
-                    path: "exercise"
-                }
-            })
-            return { currentUser }
+            try{
+                var decodedToken = jwt.verify(auth.substring(7), process.env.JWT_SECRET)             
+            }
+            catch(err) {
+                err.name === "TokenExpiredError" ? valid = false : null
+            }
+            if(valid){
+                const currentUser = await User.findById(decodedToken.id).populate({
+                    path: "foods",
+                    populate: {
+                        path: "food"
+                    }
+                }).populate({
+                    path: "exercises",
+                    populate: {
+                        path: "exercise"
+                    }
+                })                 
+                return { currentUser }
+            }
         }
     }
 }).then(() => {

@@ -6,7 +6,6 @@
     top: 0;
     width: 100%;
     background: linear-gradient(180deg, #17202A, #2a3845);
-    padding: 10px;
     box-sizing: border-box;
     z-index: 1;
     animation: headerFade 0.7s ease-in;
@@ -14,27 +13,18 @@
 
 .holder {
     display: flex;
-    align-items: center;
     height: 100%;
     flex: 1;
-}
+    box-sizing: border-box;
 
-.holder:active, .logo:active {
-    opacity: 0.7;
-    transform: translateY(1px)
-}
-
-.holder:hover, .logo:hover {
-    cursor: pointer;
+    /* border: 5px solid red; */
 }
 
 .left {
-    justify-content: flex-start;
     padding-left: 5px;
 }
 
 .right {
-    justify-content: flex-end;
     padding-right: 5px;
 }
 
@@ -45,6 +35,17 @@
 
 .image {
     border-radius: 10px;
+
+    /* border: 5px solid yellow; */
+}
+
+.image:active, .logo:active {
+    opacity: 0.7;
+    transform: translateY(1px)
+}
+
+.image:hover, .logo:hover {
+    cursor: pointer;
 }
 
 @keyframes headerFade {
@@ -55,24 +56,61 @@
 
 @media (max-width:900px) {
     .main {
-        height: 100px;
+        height: 150px;
+        padding: 5px;
     }
     .logo {
-        width: 100px;
+        width: 150px;
     }
-    .image {
+    .holder {
+        flex-direction: column;
+        justify-content: space-between;
+    }    
+    .left {
+        align-items: flex-start;
+    }
+    .right{
+        align-items: flex-end;
+    }
+    .imageRight {
         width: 65px; /* Synced with logo - max 70px */
+    }
+    .imageLeft {
+        width: 65px;
+    }
+    .logout {
+        width: 50px;
+        margin-left: 10px;
+        margin-top: 5px;
     }
 }
 
 @media (min-width:901px) {
     .main {
         height: 150px;
+        padding: 10px;
+    }
+    .holder {
+        flex-direction: row;
+        align-items: center;
+    }
+    .left {
+        justify-content: flex-start;
+    }
+    .right {
+        justify-content: flex-end;
     }
     .logo {
         width: 150px;
     }
-    .image {
+    .imageRight {
         width: 100px; /* Synced with logo - max 105px */
     }
+    .imageLeft {
+        width: 100px;
+    }
+    .logout {
+        width: 100px; /* Synced with imageLeft*/ 
+        margin-right: 50px;
+    }    
 }

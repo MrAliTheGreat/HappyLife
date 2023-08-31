@@ -1,8 +1,10 @@
 import { useState } from "react"
+import { useMutation } from "@apollo/client"
 
 import styles from "../styles/login.module.css"
+import { LOGIN } from "../constants/queries"
 
-const login = ({ setRender }) => {
+const login = ({ refetchUser }) => {
     const animationPaths = [
         "/animations/Cycling.gif",
         "/animations/FrogStroke.gif",
@@ -17,16 +19,30 @@ const login = ({ setRender }) => {
     const [answer, setAnswer] = useState(false)
     const [enter, setEnter] = useState(true)
 
-    const handleLogin = () => {
-        // Checking credentials in the database
-        // What happens if no one is found? ==> JUST PRE-DEFINED USERS FOR NOW!!!
-        if(!answer){
+    const [login, _] = useMutation(LOGIN, {
+        onError: (err) => {
+            console.log(err.graphQLErrors[0].message)
+        },
+        onCompleted: (data) => {
             setEnter(false)
             setTimeout(() => {
-                setRender("welcome")
+                localStorage.setItem("HappyLifeToken", data.login.value)       
+                refetchUser()
             }, 1000)
     
-            setUsername(""); setPassword("")
+            setUsername(""); setPassword(""); setAnswer(false);
+        },
+    })
+
+    const handleLogin = () => {
+        // What happens if no one is found? ==> JUST PRE-DEFINED USERS FOR NOW!!!
+        if(!answer){
+            login({
+                variables: {
+                    username,
+                    password
+                }
+            })
         }
     }
 
@@ -45,7 +61,7 @@ const login = ({ setRender }) => {
                         {answer ? "Yeah" : "Nope"}
                     </div>
                 </div>
-                <button className={styles.button} onClick={handleLogin}> {answer ? "Create New Account" : "Sign in"} </button>
+                <button className={styles.button} onClick={ handleLogin }> {answer ? "Create New Account" : "Sign in"} </button>
             </div>
         </div>
     )

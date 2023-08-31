@@ -2,7 +2,8 @@ import { useState, useEffect } from "react"
 
 import styles from "../styles/header.module.css"
 
-const header = ({ view, setView }) => {
+
+const header = ({ view, setView, setRender, client }) => {
     const [click, setClick] = useState(true)
 
     useEffect(() => {
@@ -14,12 +15,29 @@ const header = ({ view, setView }) => {
 
     return(
         <div className={styles.main}>
-            <div className={`${styles.holder} ${styles.left}`} onClick={() => click ? setView("exercise") : null } >
-                <img className={styles.image} src="/images/Dumbbell.png"/>
+            <div className={`${styles.holder} ${styles.left}`} >
+                <img 
+                    className={`${styles.image} ${styles.logout}`}
+                    src="/images/Logout.png"
+                    onClick={() => {
+                        setRender("login")
+                        localStorage.clear()
+                        client.resetStore()
+                    }}
+                />
+                <img 
+                    className={`${styles.image} ${styles.imageLeft}`}
+                    src="/images/Dumbbell.png"
+                    onClick={() => click ? setView("exercise") : null }
+                />
             </div>            
             <img className={styles.logo} src="/animations/Run.gif" onClick={() => click ? setView("panel") : null} />
-            <div className={`${styles.holder} ${styles.right}`} onClick={() => click ? setView("food") : null } >
-                <img className={styles.image} src="/images/Food.png"/>
+            <div className={`${styles.holder} ${styles.right}`} >
+                <img 
+                    className={`${styles.image} ${styles.imageRight}`}
+                    src="/images/Food.png"
+                    onClick={() => click ? setView("food") : null }
+                />
             </div>
         </div>
     )

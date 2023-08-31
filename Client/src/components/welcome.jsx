@@ -2,10 +2,7 @@ import { useEffect } from "react"
 
 import styles from "../styles/welcome.module.css"
 
-const welcome = ({ setRender }) => {
-    // Find this out from user's token
-    const username = "Margirit"
-
+const welcome = ({ setRender, username }) => {
     useEffect(() => {
         setTimeout(() => {
             setRender("home")

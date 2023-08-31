@@ -10,7 +10,7 @@ import Food from "./food"
 import Exercise from "./exercise"
 
 
-const home = () => {
+const home = ({ setRender, client }) => {
     const [view, setView] = useState("panel")
     const [display, setDisplay] = useState({
         "panel": false,
@@ -27,7 +27,7 @@ const home = () => {
 
     return(
         <div className={styles.main}>
-            <Header view={view} setView={setView} />
+            <Header view={view} setView={setView} setRender={setRender} client={client}/>
             <div className={`${styles.holder} ${view === "panel" ? styles.fadeIn : styles.fadeOut} ${display.panel ? "" : styles.start}`} >
                 <Summary />
                 <Gain />

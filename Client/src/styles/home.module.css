@@ -38,7 +38,7 @@
 
 @media (max-width:900px) {
     .holder {
-        margin-top: 100px; /* Synced with header height */
+        margin-top: 150px; /* Synced with header height */
         flex-direction: column;
     }
 }
