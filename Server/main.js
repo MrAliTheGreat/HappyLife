@@ -24,7 +24,8 @@ const server = new ApolloServer({
 
 startStandaloneServer(server, {
     listen: {
-        port: 4000
+        host: process.env.APOLLO_URL,
+        port: process.env.APOLLO_PORT,
     },
     context: async ({ req, _ }) => {
         let valid = true;

@@ -60,7 +60,7 @@
         padding: 5px;
     }
     .logo {
-        width: 150px;
+        width: 135px;
     }
     .holder {
         flex-direction: column;
@@ -81,7 +81,7 @@
     .logout {
         width: 50px;
         margin-left: 10px;
-        margin-top: 5px;
+        margin-top: 4px;
     }
 }
 

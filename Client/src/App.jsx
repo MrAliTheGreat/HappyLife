@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useApolloClient, useQuery } from "@apollo/client"
 
 import Login from "./components/login"
@@ -8,7 +8,7 @@ import Welcome from "./components/welcome"
 import { CURRENT_USER } from "./constants/queries"
 
 function App() {
-  const [render, setRender] = useState("login")
+  const [render, setRender] = useState("")
   const [user, setUser] = useState(null)
 
   const client = useApolloClient()
@@ -16,6 +16,7 @@ function App() {
   const { refetch } = useQuery(CURRENT_USER, {
     onError: (err) => {
       console.log(err.graphQLErrors[0].message)
+      setRender("login")
     },
     onCompleted: ({ currentUserInfo }) => {
       if(currentUserInfo){
