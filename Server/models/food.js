@@ -4,11 +4,10 @@ const schema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
-        unique: true,
     },
     scale: {
         type: String,
-        required: true,
+        required: true
     },
     calories: {
         type: Number,
@@ -16,8 +15,10 @@ const schema = new mongoose.Schema({
     },
     path: {
         type: String,
-        unique: true,
+        required: true,
     }
 })
+
+schema.index({ name: 1, scale: 1 }, { unique: true })
 
 module.exports = mongoose.model("Food", schema)

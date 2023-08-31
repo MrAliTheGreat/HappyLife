@@ -21,60 +21,26 @@ ChartJS.register(
     Tooltip
 );
 
-const gain = ({ user }) => {
-    const intake = [
-        {
-            "id": 1,
-            "food": "Hot Dog",
-            "cal": "200"
-        },
-        {
-            "id": 2,
-            "food": "Pizza",
-            "cal": "100"
-        },
-        {
-            "id": 3,
-            "food": "قرمه سبزی",
-            "cal": "1000"
-        },
-        {
-            "id": 4,
-            "food": "Rice",
-            "cal": "400"
-        },
-        {
-            "id": 5,
-            "food": "قیمه",
-            "cal": "500"
-        },
-        {
-            "id": 6,
-            "food": "دوغ",
-            "cal": "1000"
-        },
-        {
-            "id": 7,
-            "food": "Pasta",
-            "cal": "5000"
-        },
-        {
-            "id": 8,
-            "food": "Banana",
-            "cal": "1234"
-        },
-        {
-            "id": 9,
-            "food": "ohnfalkjfniabf",
-            "cal": "56778"
-        },
-        {
-            "id": 10,
-            "food": "Spaghetti",
-            "cal": "10234"
-        }
-    ]
 
+const getGraphVals = (history) => {
+    let vals = [0, 0, 0, 0, 0, 0, 0]
+    const numPreviousDays = {
+        "Sat": 0,
+        "Sun": 1,
+        "Mon": 2,
+        "Tue": 3,
+        "Wed": 4,
+        "Thu": 5,
+        "Fri": 6
+    }
+    const pos = numPreviousDays[history.at(-1).date.slice(0, 3)]
+    for(let i = pos; i >= 0; i--) {
+        vals[i] = history.at(-1 - pos + i) ? history.at(-1 - pos + i).gain : 0
+    }
+    return vals
+}
+
+const gain = ({ user }) => {
     const [graphShow, setGraphShow] = useState("")
 
     const handleGraph = () => {
@@ -92,11 +58,14 @@ const gain = ({ user }) => {
                 </div>
                 <div className={styles.list}>
                     {
-                        intake.map(( {id, food, cal} ) => {
+                        user.foods.map(({ calories, food }) => {
                             return(
-                                <div key={id} className={styles.row}>
-                                    <div> {food} </div>
-                                    <div> {cal} </div>
+                                <div key={food.id} className={styles.row}>
+                                    <div className={styles.imageHolder}>
+                                        <img className={styles.image} src={ food.path } />
+                                    </div>                                    
+                                    <div className={styles.name}> {food.name} </div>
+                                    <div className={styles.cal}> {calories} </div>
                                 </div>
                             )
                         })
@@ -110,7 +79,7 @@ const gain = ({ user }) => {
                         {
                             labels: ["Sat", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri"],
                             datasets: [{
-                                data: [5600, 7800, 4010, 12050, 0, 900, 0],
+                                data: getGraphVals(user.history),
                             }]
                         }                        
                     }

@@ -160,8 +160,8 @@ const resolvers = {
 
             const food = new Food({...args,
                 name: getName(args.name, " "),
-                scale: getName(args.scale, " "),
-                path: `/images/${getName(args.name, "")}.png`
+                scale: args.scale.length !== 1 ? getName(args.scale, " ") : args.scale,
+                path: `/images/foods/${getName(args.name, "")}.png`
             })
             try{
                 await food.save()
@@ -188,7 +188,7 @@ const resolvers = {
 
             const exercise = new Exercise({...args, 
                 name: getName(args.name, " "),
-                scale: getName(args.scale, " "),                
+                scale: args.scale.length !== 1 ? getName(args.scale, " ") : args.scale,
                 path: `/animations/${getName(args.name, "")}.gif`})
             try{
                 await exercise.save()
@@ -247,7 +247,10 @@ const resolvers = {
                 })
             }            
            
-            const food = await Food.findOne({ name: args.foodname, scale: args.scalename })
+            const food = await Food.findOne({ 
+                name: args.foodname, 
+                scale: args.scalename
+            })
             if(!food) {
                 throw new GraphQLError("Food Not Found!", {
                     extensions: {
@@ -285,7 +288,10 @@ const resolvers = {
                 })
             }
 
-            const exercise = await Exercise.findOne({ name: args.exercisename, scale: args.scalename })
+            const exercise = await Exercise.findOne({ 
+                name: args.exercisename, 
+                scale: args.scalename
+            })
             if(!exercise) {
                 throw new GraphQLError("Exercise Not Found!", {
                     extensions: {

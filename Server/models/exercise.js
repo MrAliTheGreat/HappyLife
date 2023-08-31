@@ -4,7 +4,6 @@ const schema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
-        unique: true,
     },
     scale: {
         type: String,
@@ -16,8 +15,10 @@ const schema = new mongoose.Schema({
     },
     path: {
         type: String,
-        unique: true,
+        required: true,
     }
 })
+
+schema.index({ name: 1, scale: 1 }, { unique: true })
 
 module.exports = mongoose.model("Exercise", schema)

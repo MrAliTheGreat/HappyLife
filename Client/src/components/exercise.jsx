@@ -201,7 +201,7 @@ const exercise = ({ view }) => {
         if(option === "exercise"){
             setNewItem({...newItem, exerciseName: e.target.value})
             if(e.target.value){
-                setChosen({...chosen, exercise: { id: 0, name: e.target.value, path: "/images/New.png" } })
+                setChosen({...chosen, exercise: { id: 0, name: e.target.value, path: "/images/icons/New.png" } })
                 setAmount("1")
                 return
             }
@@ -212,7 +212,7 @@ const exercise = ({ view }) => {
         setNewItem({...newItem, scaleName: e.target.value})
         chosen.exercise ?
         e.target.value ?
-        setChosen({...chosen, scale: {id: 0, name: e.target.value, path: "/images/New.png"} }) :
+        setChosen({...chosen, scale: {id: 0, name: e.target.value, path: "/images/icons/New.png"} }) :
         setChosen({...chosen, scale: null }) :
         setShake({...shake, exercise: e.target.value !== ""})
     }
@@ -322,7 +322,7 @@ const exercise = ({ view }) => {
             <div className={`${styles.dropdownMenu} ${getDropDownMenuClass("exercise")}`}>
                 <div className={styles.row} >
                     <div className={styles.holder}>
-                        <img className={styles.image} src="/images/Search.png" />
+                        <img className={styles.image} src="/images/icons/Search.png" />
                     </div>
                     <div className={`${styles.holder} ${styles.holderExtend}`}>
                         <input 
@@ -335,7 +335,7 @@ const exercise = ({ view }) => {
                 </div>
                 <div className={styles.row} >
                     <div className={styles.holder}>
-                        <img className={styles.image} src="/images/Missing.png" />
+                        <img className={styles.image} src="/images/icons/Missing.png" />
                     </div>
                     <div className={`${styles.holder} ${styles.holderExtend}`}>
                         <input
@@ -386,7 +386,7 @@ const exercise = ({ view }) => {
             <div className={`${styles.dropdownMenu} ${styles.secondDropdownMenu} ${getDropDownMenuClass("scale")}`}>
                 <div className={styles.row} >
                     <div className={styles.holder}>
-                        <img className={styles.image} src="/images/Search.png" />
+                        <img className={styles.image} src="/images/icons/Search.png" />
                     </div>
                     <div className={`${styles.holder} ${styles.holderExtend}`}>
                         <input 
@@ -399,7 +399,7 @@ const exercise = ({ view }) => {
                 </div>
                 <div className={styles.row} >
                     <div className={styles.holder}>
-                        <img className={styles.image} src="/images/Missing.png" />
+                        <img className={styles.image} src="/images/icons/Missing.png" />
                     </div>
                     <div className={`${styles.holder} ${styles.holderExtend}`}>
                         <input
@@ -450,7 +450,7 @@ const exercise = ({ view }) => {
             <div className={`${styles.holder} ${styles.trash}`} onClick={ handleClear }>
                 <img
                     width="70px" 
-                    src="/images/Trash.png"
+                    src="/images/icons/Trash.png"
                 />
             </div>
         </div>

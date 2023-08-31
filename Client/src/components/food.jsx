@@ -201,7 +201,7 @@ const food = ({ view }) => {
         if(option === "food"){
             setNewItem({...newItem, foodName: e.target.value})
             if(e.target.value){
-                setChosen({...chosen, food: { id: 0, name: e.target.value, path: "/images/New.png" } })
+                setChosen({...chosen, food: { id: 0, name: e.target.value, path: "/images/icons/New.png" } })
                 setAmount("1")
                 return
             }
@@ -212,7 +212,7 @@ const food = ({ view }) => {
         setNewItem({...newItem, scaleName: e.target.value})
         chosen.food ?
         e.target.value ?
-        setChosen({...chosen, scale: {id: 0, name: e.target.value, path: "/images/New.png"} }) :
+        setChosen({...chosen, scale: {id: 0, name: e.target.value, path: "/images/icons/New.png"} }) :
         setChosen({...chosen, scale: null }) :
         setShake({...shake, food: e.target.value !== ""})
     }
@@ -320,7 +320,7 @@ const food = ({ view }) => {
             <div className={`${styles.dropdownMenu} ${getDropDownMenuClass("food")}`}>
                 <div className={styles.row} >
                     <div className={styles.holder}>
-                        <img className={styles.image} src="/images/Search.png" />
+                        <img className={styles.image} src="/images/icons/Search.png" />
                     </div>
                     <div className={`${styles.holder} ${styles.holderExtend}`}>
                         <input 
@@ -333,7 +333,7 @@ const food = ({ view }) => {
                 </div>
                 <div className={styles.row} >
                     <div className={styles.holder}>
-                        <img className={styles.image} src="/images/Missing.png" />
+                        <img className={styles.image} src="/images/icons/Missing.png" />
                     </div>
                     <div className={`${styles.holder} ${styles.holderExtend}`}>
                         <input
@@ -377,7 +377,7 @@ const food = ({ view }) => {
             <div className={`${styles.dropdownMenu} ${styles.secondDropdownMenu} ${getDropDownMenuClass("scale")}`}>
                 <div className={styles.row} >
                     <div className={styles.holder}>
-                        <img className={styles.image} src="/images/Search.png" />
+                        <img className={styles.image} src="/images/icons/Search.png" />
                     </div>
                     <div className={`${styles.holder} ${styles.holderExtend}`}>
                         <input 
@@ -390,7 +390,7 @@ const food = ({ view }) => {
                 </div>
                 <div className={styles.row} >
                     <div className={styles.holder}>
-                        <img className={styles.image} src="/images/Missing.png" />
+                        <img className={styles.image} src="/images/icons/Missing.png" />
                     </div>
                     <div className={`${styles.holder} ${styles.holderExtend}`}>
                         <input
@@ -441,7 +441,7 @@ const food = ({ view }) => {
             <div className={`${styles.holder} ${styles.trash}`} onClick={ handleClear }>
                 <img
                     width="70px" 
-                    src="/images/Trash.png"
+                    src="/images/icons/Trash.png"
                 />
             </div>
         </div>

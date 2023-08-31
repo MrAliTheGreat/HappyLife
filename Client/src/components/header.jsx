@@ -18,7 +18,7 @@ const header = ({ view, setView, setRender, client }) => {
             <div className={`${styles.holder} ${styles.left}`} >
                 <img 
                     className={`${styles.image} ${styles.logout}`}
-                    src="/images/Logout.png"
+                    src="/images/icons/Logout.png"
                     onClick={() => {
                         setRender("login")
                         localStorage.clear()
@@ -27,7 +27,7 @@ const header = ({ view, setView, setRender, client }) => {
                 />
                 <img 
                     className={`${styles.image} ${styles.imageLeft}`}
-                    src="/images/Dumbbell.png"
+                    src="/images/icons/Dumbbell.png"
                     onClick={() => click ? setView("exercise") : null }
                 />
             </div>            
@@ -35,7 +35,7 @@ const header = ({ view, setView, setRender, client }) => {
             <div className={`${styles.holder} ${styles.right}`} >
                 <img 
                     className={`${styles.image} ${styles.imageRight}`}
-                    src="/images/Food.png"
+                    src="/images/icons/Food.png"
                     onClick={() => click ? setView("food") : null }
                 />
             </div>
