@@ -1,10 +1,8 @@
 import { useState } from "react"
+
 import styles from "../styles/summary.module.css"
 
-const summary = () => {
-    const remainingCal = 4000
-    const totalCal = 6000
-
+const summary = ({ total, remaining, gain, loss, streak }) => {
     const [detail, setDetail] = useState("")
 
     const getBorderStyling = (remainingCal, totalCal) => {
@@ -46,24 +44,24 @@ const summary = () => {
     }
 
     return(
-    <div className={styles.main} style={{background: getMainGradientStyling(remainingCal, totalCal)}} onDoubleClick={handleDetail} >
-            <div className={`${styles.count} ${detail === "shrink" ? styles.countShrink : detail === "expand" ? styles.countExpand : ""}`} style={{border: getBorderStyling(remainingCal, totalCal), background: getCircleStyling(remainingCal, totalCal)}}>
-                {remainingCal} / {totalCal}
+    <div className={styles.main} style={{background: getMainGradientStyling(remaining, total)}} onDoubleClick={handleDetail} >
+            <div className={`${styles.count} ${detail === "shrink" ? styles.countShrink : detail === "expand" ? styles.countExpand : ""}`} style={{border: getBorderStyling(remaining, total), background: getCircleStyling(remaining, total)}}>
+                {remaining} / {total}
             </div>
             <div className={`${styles.details} ${detail === "shrink" ? styles.detailsShow : detail === "expand" ? styles.detailsHide : styles.detailsStart}`}>
                 <div>
                     Remaining (Cal): <br/>
                     Total (Cal): <br/>
-                    Intake (Cal): <br/>
+                    Food (Cal): <br/>
                     Exercise (Cal): <br/>
                     Streak (Days): <br/>
                 </div>
                 <div>
-                    {remainingCal} <br/>
-                    {totalCal} <br/>
-                    5100 <br/>
-                    1000 <br/>
-                    390 <br/>
+                    { remaining } <br/>
+                    { total } <br/>
+                    { gain } <br/>
+                    { loss } <br/>
+                    { streak } <br/>
                 </div>
             </div>
         </div>

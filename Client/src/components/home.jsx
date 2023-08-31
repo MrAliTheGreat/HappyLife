@@ -10,7 +10,7 @@ import Food from "./food"
 import Exercise from "./exercise"
 
 
-const home = ({ setRender, client }) => {
+const home = ({ setRender, client, user }) => {
     const [view, setView] = useState("panel")
     const [display, setDisplay] = useState({
         "panel": false,
@@ -25,13 +25,21 @@ const home = ({ setRender, client }) => {
         }, 500) // Synced with fade animation home.module.css
     }, [view])
 
+    console.log(user)
+
     return(
         <div className={styles.main}>
             <Header view={view} setView={setView} setRender={setRender} client={client}/>
             <div className={`${styles.holder} ${view === "panel" ? styles.fadeIn : styles.fadeOut} ${display.panel ? "" : styles.start}`} >
-                <Summary />
-                <Gain />
-                <Loss />
+                <Summary 
+                    total={ user.totalCals }
+                    remaining={ user.totalCals - user.history.at(-1).gain }
+                    gain={ user.history.at(-1).gain }
+                    loss={ user.history.at(-1).loss }
+                    streak={ user.streak }
+                />
+                <Gain user={user} />
+                <Loss user={user} />
             </div>
             <div className={`${styles.holder} ${view === "food" ? styles.fadeIn : styles.fadeOut} ${display.food ? "" : styles.start}`} >
                 <Food view={view} />

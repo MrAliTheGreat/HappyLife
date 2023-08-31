@@ -22,7 +22,7 @@ ChartJS.register(
 );
 
 
-const loss = () => {
+const loss = ({ user }) => {
     const loss = [
         {
             "id": 1,

@@ -21,7 +21,7 @@ ChartJS.register(
     Tooltip
 );
 
-const gain = () => {
+const gain = ({ user }) => {
     const intake = [
         {
             "id": 1,

@@ -31,7 +31,7 @@ function App() {
       {
         render === "login" ? <Login refetchUser={ refetch } /> :        
         user && render === "welcome" ? <Welcome setRender={ setRender } username={ user.username } /> :
-        user && render === "home" ? <Home setRender={setRender} client={ client }/> :
+        user && render === "home" ? <Home setRender={setRender} client={ client } user={user} /> :
         null
       }
     </>
