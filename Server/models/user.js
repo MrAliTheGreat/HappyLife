@@ -27,14 +27,11 @@ const schema = mongoose.Schema({
         required: true,
     },
     foods: [{
-        food: {
+        foodScale: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "Food",
+            ref: "FoodScale",
         },
         amount: {
-            type: Number
-        },
-        calories: {
             type: Number
         },
         date: {
@@ -42,14 +39,11 @@ const schema = mongoose.Schema({
         },
     }],
     exercises: [{
-        exercise: {
+        exerciseScale: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "Exercise",            
+            ref: "ExerciseScale",            
         },
         amount: {
-            type: Number
-        },
-        calories: {
             type: Number
         },
         date: {

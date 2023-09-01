@@ -11,37 +11,58 @@ export const LOGIN = gql`
 export const CURRENT_USER = gql`
     query CurrentUserInfo {
         currentUserInfo {
-            username
-            totalCals
-            streak
-            history {
-            date
-            gain
-            loss
+            exercises {
+                amount
+                calories
+                date
+                exercise {
+                    id
+                    name
+                    scale {
+                        name
+                        path
+                    }
+                    calories
+                    path
+                }
             }
             foods {
-            amount
-            calories
-            date
-            food {
-                id
-                name
-                scale
+                amount
                 calories
-                path
+                date
+                food {
+                    calories
+                    id
+                    name
+                    path
+                    scale {
+                        name
+                        path
+                    }
+                }
             }
+            history {
+                date
+                gain
+                loss
             }
-            exercises {
-            amount
+            streak
+            totalCals
+            username
+        }
+    }
+`
+
+export const ALL_FOODS = gql`
+    query AllFoods {
+        allFoods {
             calories
-            date
-            exercise {
-                id
+            id
+            name
+            path
+            scale {
                 name
-                scale
-                calories
                 path
-            }
             }
         }
     }

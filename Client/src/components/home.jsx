@@ -25,11 +25,11 @@ const home = ({ setRender, client, user }) => {
         }, 500) // Synced with fade animation home.module.css
     }, [view])
 
-    console.log(user)
+    // console.log(user)
 
     return(
         <div className={styles.main}>
-            <Header view={view} setView={setView} setRender={setRender} client={client}/>
+            <Header view={ view } setView={setView} setRender={setRender} client={client}/>
             <div className={`${styles.holder} ${view === "panel" ? styles.fadeIn : styles.fadeOut} ${display.panel ? "" : styles.start}`} >
                 <Summary 
                     total={ user.totalCals }
@@ -42,10 +42,10 @@ const home = ({ setRender, client, user }) => {
                 <Loss user={user} />
             </div>
             <div className={`${styles.holder} ${view === "food" ? styles.fadeIn : styles.fadeOut} ${display.food ? "" : styles.start}`} >
-                <Food view={view} />
+                <Food view={ view } />
             </div>
             <div className={`${styles.holder} ${view === "exercise" ? styles.fadeIn : styles.fadeOut} ${display.exercise ? "" : styles.start}`} >
-                <Exercise view={view} />
+                <Exercise view={ view } />
             </div>            
         </div>
     )

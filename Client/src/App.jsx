@@ -15,6 +15,7 @@ function App() {
 
   const { refetch } = useQuery(CURRENT_USER, {
     onError: (err) => {
+      console.log(err)
       console.log(err.graphQLErrors[0].message)
       setRender("login")
     },

@@ -4,7 +4,7 @@ const schema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
-        unique: true,
+        unique: true
     },
     path: {
         type: String,
@@ -12,4 +12,4 @@ const schema = new mongoose.Schema({
     }
 })
 
-module.exports = mongoose.model("Exercise", schema)
+module.exports = mongoose.model("Scale", schema)

@@ -21,7 +21,6 @@ ChartJS.register(
     Tooltip
 );
 
-
 const gain = ({ user }) => {
     const [graphShow, setGraphShow] = useState("")
 

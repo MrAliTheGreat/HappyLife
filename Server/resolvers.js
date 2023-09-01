@@ -4,8 +4,10 @@ const jwt = require("jsonwebtoken")
 
 const Food = require("./models/food")
 const Exercise = require("./models/exercise")
+const Scale = require("./models/scale")
 const User = require("./models/user")
-const typeDefs = require("./schema")
+const FoodScale = require("./models/foodScale")
+const ExerciseScale = require("./models/exerciseScale")
 const { getDayDate, getName, getBMR, getStreak } = require("./utils/tools")
 
 const LOSS_RATE = 1000
@@ -58,33 +60,103 @@ const resolvers = {
         allFoods: async () => {
             return Food.find({})
         },
-        allFoodScales: async (_, args) => {
-            const food = await Food.find({ name: args.name })
+
+        allExercises: async () => {
+            return Exercise.find({})
+        },
+
+        allFoodScales: async () => {
+            return FoodScale.find({}).populate("food").populate("scale")
+        },
+
+        allExerciseScales: async () => {
+            return ExerciseScale.find({}).populate("exercise").populate("scale")
+        },
+
+        foodScales: async (_, args) => {
+            const food = await Food.findOne({
+                name: args.foodname            
+            })
             if(!food){
                 throw new GraphQLError("Food Not Found!", {
                     extensions: {
                         code: "FOOD_NOT_FOUND",
-                        invalidArgs: args.name,
+                        invalidArgs: args.foodname,
                     }
                 })                
             }
-            return food
+
+            const foodScales = await FoodScale.find({ 
+                food
+            }).populate("food").populate("scale")
+            if(!foodScales){
+                throw new GraphQLError("Food Scales Not Found!", {
+                    extensions: {
+                        code: "FOOD_SCALES_NOT_FOUND",
+                    }
+                })                
+            }
+            return foodScales
         },
-        allExercises: async () => {
-            return Exercise.find({})
-        },
-        allExerciseScales: async (_, args) => {
-            const exercise = await Exercise.find({ name: args.name })
+
+        exerciseScales: async (_, args) => {
+            const exercise = await Exercise.findOne({
+                name: args.exercisename            
+            })
             if(!exercise){
                 throw new GraphQLError("Exercise Not Found!", {
                     extensions: {
                         code: "EXERCISE_NOT_FOUND",
-                        invalidArgs: args.name,
+                        invalidArgs: args.exercisename,
                     }
                 })                
             }
-            return exercise
+
+            const exerciseScales = await ExerciseScale.find({
+                exercise
+            }).populate("exercise").populate("scale")
+            if(!exerciseScales){
+                throw new GraphQLError("Exercise Scales Not Found!", {
+                    extensions: {
+                        code: "EXERCISE_SCALES_NOT_FOUND",
+                    }
+                })
+            }
+            return exerciseScales
         },
+
+        userFoodsToday: (...[, , { currentUser }]) => {
+            if(!currentUser){
+                throw new GraphQLError("Access Denied!", {
+                    extensions: {
+                        code: "ACCESS_DENIED",
+                    }
+                })
+            }
+
+            return currentUser.foods.map((food) => {
+                if(food.date === getDayDate()){
+                    return food
+                }
+            })
+        },
+
+        userExercisesToday: (...[, , { currentUser }]) => {
+            if(!currentUser){
+                throw new GraphQLError("Access Denied!", {
+                    extensions: {
+                        code: "ACCESS_DENIED",
+                    }
+                })
+            }
+
+            return currentUser.exercises.map((exercise) => {
+                if(exercise.date === getDayDate()){
+                    return exercise
+                }
+            })
+        },
+
         currentUserInfo: (...[, , { currentUser }]) => {
             if(!currentUser){
                 throw new GraphQLError("Access Denied!", {
@@ -103,36 +175,7 @@ const resolvers = {
                 history: currentUser.history
             }
         },
-        userFoods: (...[, , { currentUser }]) => {
-            if(!currentUser){
-                throw new GraphQLError("Access Denied!", {
-                    extensions: {
-                        code: "ACCESS_DENIED",
-                    }
-                })
-            }
 
-            return currentUser.foods.map((food) => {
-                if(food.date === getDayDate()){
-                    return food
-                }
-            })
-        },
-        userExercises: (...[, , { currentUser }]) => {
-            if(!currentUser){
-                throw new GraphQLError("Access Denied!", {
-                    extensions: {
-                        code: "ACCESS_DENIED",
-                    }
-                })
-            }
-
-            return currentUser.exercises.map((exercise) => {
-                if(exercise.date === getDayDate()){
-                    return exercise
-                }
-            })
-        },        
         // allUsers: async () => {
         //     return User.find({}).populate({
         //         path: "foods",
@@ -158,16 +201,46 @@ const resolvers = {
                 })
             }
 
-            const food = new Food({...args,
-                name: getName(args.name, " "),
-                scale: args.scale.length !== 1 ? getName(args.scale, " ") : args.scale,
-                path: `/images/foods/${getName(args.name, "")}.png`
+            var food = new Food({
+                name: getName(args.foodname, " "),
+                path: `/images/foods/${getName(args.foodname, "")}.png`
             })
             try{
                 await food.save()
             }
             catch(err){
-                throw new GraphQLError("Food Already Exists!", {
+                // Duplicate Food
+                food = await Food.findOne({
+                    name: getName(args.foodname, " "),
+                    path: `/images/foods/${getName(args.foodname, "")}.png`
+                })
+            }
+
+            var scale = new Scale({
+                name: args.scalename.length !== 1 ? getName(args.scalename, " ") : args.scalename,
+                path: "/images/icons/Scale.png"
+            })
+            try{
+                await scale.save()
+            }
+            catch(err){
+                // Duplicate Scale
+                scale = await Scale.findOne({
+                    name: args.scalename.length !== 1 ? getName(args.scalename, " ") : args.scalename,
+                    path: "/images/icons/Scale.png"
+                })
+            }
+
+            const foodScale = new FoodScale({
+                food,
+                scale,
+                calories: args.calories
+            })
+            try{
+                await foodScale.save()
+            }
+            catch(err){
+                throw new GraphQLError("Food-Scale Already Exists!", {
                     extensions: {
                         code: "BAD_USER_INPUT",
                         invalidArgs: args,
@@ -175,8 +248,10 @@ const resolvers = {
                     }
                 })
             }
-            return food
+
+            return foodScale
         },
+
         addExercise: async (_, args, { currentUser }) => {
             if(!currentUser){
                 throw new GraphQLError("Access Denied!", {
@@ -186,15 +261,46 @@ const resolvers = {
                 })
             }
 
-            const exercise = new Exercise({...args, 
-                name: getName(args.name, " "),
-                scale: args.scale.length !== 1 ? getName(args.scale, " ") : args.scale,
-                path: `/animations/${getName(args.name, "")}.gif`})
+            var exercise = new Exercise({
+                name: getName(args.exercisename, " "),
+                path: `/animations/${getName(args.exercisename, "")}.gif`
+            })
             try{
                 await exercise.save()
             }
             catch(err){
-                throw new GraphQLError("Exercise Already Exists!", {
+                // Duplicate Exercise
+                exercise = await Exercise.findOne({
+                    name: getName(args.exercisename, " "),
+                    path: `/animations/${getName(args.exercisename, "")}.gif`
+                })
+            }
+
+            var scale = new Scale({
+                name: args.scalename.length !== 1 ? getName(args.scalename, " ") : args.scalename,
+                path: "/images/icons/Scale.png"
+            })
+            try{
+                await scale.save()
+            }
+            catch(err){
+                // Duplicate Scale
+                scale = await Scale.findOne({
+                    name: args.scalename.length !== 1 ? getName(args.scalename, " ") : args.scalename,
+                    path: "/images/icons/Scale.png"
+                })
+            }            
+
+            const exerciseScale = new ExerciseScale({
+                exercise,
+                scale,
+                calories: args.calories
+            })
+            try{
+                await exerciseScale.save()
+            }
+            catch(err){
+                throw new GraphQLError("Exercise-Scale Already Exists!", {
                     extensions: {
                         code: "BAD_USER_INPUT",
                         invalidArgs: args,
@@ -202,8 +308,10 @@ const resolvers = {
                     }
                 })
             }
-            return exercise
+
+            return exerciseScale
         },
+
         addUser: async (_, args) => {
             const passwordHash = await bcrypt.hash(args.password, 10)
 
@@ -237,7 +345,9 @@ const resolvers = {
                 history: user.history
             }
         },
-        addHistory: _addHistory,
+
+        addUserHistory: _addHistory,
+
         addUserFood: async (_, args, { currentUser }) => {
             if(!currentUser){
                 throw new GraphQLError("Access Denied!", {
@@ -245,30 +355,56 @@ const resolvers = {
                         code: "ACCESS_DENIED",
                     }
                 })
-            }            
-           
-            const food = await Food.findOne({ 
-                name: args.foodname, 
-                scale: args.scalename
+            }
+
+            const food = await Food.findOne({
+                name: args.foodname,
+                path: `/images/foods/${getName(args.foodname, "")}.png`
             })
-            if(!food) {
+            if(!food){
                 throw new GraphQLError("Food Not Found!", {
                     extensions: {
                         code: "FOOD_NOT_FOUND",
-                        invalidArgs: args,
+                        invalidArgs: args.foodname,
                     }
                 })                
             }
 
-            currentUser.foods = currentUser.foods.concat({
+            const scale = await Scale.findOne({
+                name: args.scalename,
+                path: "/images/icons/Scale.png"   // path: `/image/scales/${args.scalename}.png` --> Custom Path if Needed
+            })
+            if(!scale){
+                throw new GraphQLError("Scale Not Found!", {
+                    extensions: {
+                        code: "SCALE_NOT_FOUND",
+                        invalidArgs: args.scalename,
+                    }
+                })                
+            }            
+
+            const foodScale = await FoodScale.findOne({
                 food,
+                scale
+            }).populate("food").populate("scale")
+            if(!foodScale) {
+                throw new GraphQLError("Food-Scale Not Found!", {
+                    extensions: {
+                        code: "FOOD_SCALE_NOT_FOUND",
+                        invalidArgs: args,
+                    }
+                })
+            }
+
+            currentUser.foods = currentUser.foods.concat({
+                foodScale,
                 amount: args.amount,
-                calories: args.amount * food.calories,
                 date: getDayDate()
             })
+            
             await currentUser.save()
 
-            await _addHistory(null, { gain: args.amount * food.calories, loss: 0 }, { currentUser }) // Awesome line of code! --> Call a query within a query
+            await _addHistory(null, { gain: args.amount * foodScale.calories, loss: 0 }, { currentUser }) // Awesome line of code! --> Call a query within a query
 
             return {
                 username: currentUser.username,
@@ -279,6 +415,7 @@ const resolvers = {
                 history: currentUser.history
             }
         },
+
         addUserExercise: async (_, args, { currentUser }) => {
             if(!currentUser){
                 throw new GraphQLError("Access Denied!", {
@@ -288,28 +425,53 @@ const resolvers = {
                 })
             }
 
-            const exercise = await Exercise.findOne({ 
-                name: args.exercisename, 
-                scale: args.scalename
+            const exercise = await Exercise.findOne({
+                name: args.exercisename,
+                path: `/animations/${getName(args.exercisename, "")}.gif`
             })
-            if(!exercise) {
+            if(!exercise){
                 throw new GraphQLError("Exercise Not Found!", {
                     extensions: {
                         code: "EXERCISE_NOT_FOUND",
+                        invalidArgs: args.exercisename,
+                    }
+                })                
+            }
+
+            const scale = await Scale.findOne({
+                name: args.scalename,
+                path: "/images/icons/Scale.png"   // path: `/image/scales/${args.scalename}.png` --> Custom Path if Needed
+            })
+            if(!scale){
+                throw new GraphQLError("Scale Not Found!", {
+                    extensions: {
+                        code: "SCALE_NOT_FOUND",
+                        invalidArgs: args.scalename,
+                    }
+                })                
+            }             
+
+            const exerciseScale = await ExerciseScale.findOne({
+                exercise,
+                scale
+            }).populate("exercise").populate("scale")
+            if(!exerciseScale) {
+                throw new GraphQLError("Exercise Scale Not Found!", {
+                    extensions: {
+                        code: "EXERCISE_SCALE_NOT_FOUND",
                         invalidArgs: args,
                     }
                 })
             }
 
             currentUser.exercises = currentUser.exercises.concat({
-                exercise,
+                exerciseScale,
                 amount: args.amount,
-                calories: args.amount * exercise.calories,
                 date: getDayDate()
             })
             await currentUser.save()
 
-            await _addHistory(null, { gain: 0, loss: args.amount * exercise.calories }, { currentUser }) // Awesome line of code! --> Call a query within a query            
+            await _addHistory(null, { gain: 0, loss: args.amount * exerciseScale.calories }, { currentUser }) // Awesome line of code! --> Call a query within a query            
 
             return {
                 username: currentUser.username,
@@ -320,6 +482,7 @@ const resolvers = {
                 history: currentUser.history
             }
         },
+
         login: async (_, args) => {
             const user = await User.findOne({ username: args.username })
             if(!user){

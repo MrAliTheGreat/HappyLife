@@ -38,17 +38,32 @@ startStandaloneServer(server, {
                 err.name === "TokenExpiredError" ? valid = false : null
             }
             if(valid){
-                const currentUser = await User.findById(decodedToken.id).populate({
-                    path: "foods",
+                const currentUser = await User.findById(decodedToken.id)
+                .populate({
+                    path: "foods.foodScale",
                     populate: {
-                        path: "food"
-                    }
-                }).populate({
-                    path: "exercises",
+                        path: "food",
+                    },
+                })
+                .populate({
+                    path: "foods.foodScale",
+                    populate: {
+                        path: "scale",
+                    },
+                })                
+                .populate({
+                    path: "exercises.exerciseScale",
                     populate: {
                         path: "exercise"
-                    }
-                })                 
+                    },
+                })
+                .populate({
+                    path: "exercises.exerciseScale",
+                    populate: {
+                        path: "scale"
+                    },
+                })
+
                 return { currentUser }
             }
         }

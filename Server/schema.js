@@ -2,17 +2,49 @@ const typeDefs = `
     type Food {
         id: ID!
         name: String!
-        scale: String!
-        calories: Int!
         path: String!
     }
 
     type Exercise {
         id: ID!
         name: String!
-        scale: String!
-        calories: Int!
         path: String!
+    }
+
+    type Scale {
+        id: ID!
+        name: String!
+        path: String!
+    }
+
+    type FoodScale {
+        food: Food!
+        scale: Scale!
+        calories: Int!
+    }
+
+    type ExerciseScale {
+        exercise: Exercise!
+        scale: Scale!
+        calories: Int!
+    }
+
+    type UserFood {
+        foodScale: FoodScale!
+        amount: Int!
+        date: String!        
+    }
+
+    type UserExercise {
+        exerciseScale: ExerciseScale!
+        amount: Int!
+        date: String!
+    }
+
+    type History {
+        date: String!
+        gain: Int!
+        loss: Int!
     }
 
     type User {
@@ -28,26 +60,6 @@ const typeDefs = `
         history: [History]!
     }
 
-    type History {
-        date: String!
-        gain: Int!
-        loss: Int!
-    }
-
-    type UserFood {
-        food: Food!
-        amount: Int!
-        calories: Int!
-        date: String!        
-    }
-
-    type UserExercise {
-        exercise: Exercise!
-        amount: Int!
-        calories: Int!
-        date: String!
-    }
-
     type UserInfo {
         username: String!
         totalCals: Int!
@@ -61,40 +73,46 @@ const typeDefs = `
         value: String!
     }
 
+
     type Query {
-        allFoods: [Food!]!
+        allFoods: [Food]!
 
-        allFoodScales(
-            name: String!
-        ): [Food!]!
+        allExercises: [Exercise]!
 
-        allExercises: [Exercise!]!
+        allFoodScales: [FoodScale]!
 
-        allExerciseScales(
-            name: String!
-        ): [Exercise!]!
+        allExerciseScales: [ExerciseScale]!
 
-        allUsers: [User!]!
+        foodScales(
+            foodname: String!
+        ): [FoodScale]!
+
+        exerciseScales(
+            exercisename: String!
+        ): [ExerciseScale]!
+
+        userFoodsToday: [UserFood]!
+
+        userExercisesToday: [UserExercise]!
 
         currentUserInfo: UserInfo
 
-        userFoods: [UserFood]!
-
-        userExercises: [UserExercise]!
+        allUsers: [User]!
     }
+
 
     type Mutation {
         addFood(
-            name: String!
-            scale: String!
+            foodname: String!
+            scalename: String!
             calories: Int!
-        ): Food
+        ): FoodScale
 
         addExercise(
-            name: String!
-            scale: String!
+            exercisename: String!
+            scalename: String!
             calories: Int!
-        ): Exercise
+        ): ExerciseScale
 
         addUser(
             username: String!
@@ -105,7 +123,7 @@ const typeDefs = `
             sex: String!
         ): UserInfo
 
-        addHistory(
+        addUserHistory(
             gain: Int!
             loss: Int!
         ): UserInfo
@@ -120,7 +138,7 @@ const typeDefs = `
             exercisename: String!
             scalename: String!
             amount: Int!
-        ): UserInfo
+        ): UserInfo        
 
         login(
             username: String!
