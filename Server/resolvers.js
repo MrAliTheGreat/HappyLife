@@ -167,15 +167,15 @@ const resolvers = {
         
         foodScaleCalories: async (_, args) => {
             return FoodScale.findOne({
-                food: args.foodID,
-                scale: args.scaleID
+                food: args.foodId,
+                scale: args.scaleId
             }).populate("food").populate("scale")
         },
 
         exerciseScaleCalories: async (_, args) => {
             return ExerciseScale.findOne({
-                exercise: args.exerciseID,
-                scale: args.scaleID
+                exercise: args.exerciseId,
+                scale: args.scaleId
             }).populate("exercise").populate("scale")
         },        
 

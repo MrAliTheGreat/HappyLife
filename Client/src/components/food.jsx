@@ -3,7 +3,14 @@ import { useMutation, useQuery } from "@apollo/client"
 
 import styles from "../styles/food.module.css"
 
-import { FOODS, SCALES, FOOD_SCALES, SCALE_FOODS, ADD_FOOD } from "../constants/queries"
+import { 
+    FOODS, 
+    SCALES, 
+    FOOD_SCALES, 
+    SCALE_FOODS, 
+    FOOD_SCALE_CALORIES, 
+    ADD_FOOD 
+} from "../constants/queries"
 
 
 const food = ({ view }) => {
@@ -81,6 +88,17 @@ const food = ({ view }) => {
         },        
         skip: !chosen.scale
     })
+
+    const foodScaleCaloriesRes =  useQuery(FOOD_SCALE_CALORIES, {
+        onError: (err) => {
+            console.log(err.graphQLErrors[0].message)
+        },
+        variables: {
+            foodId: chosen.food ? chosen.food.id : null,
+            scaleId: chosen.scale ? chosen.scale.id : null,
+        },        
+        skip: !(chosen.food && chosen.scale)
+    })    
 
     const [ addFood ] = useMutation(ADD_FOOD, {
         refetchQueries: [ { query: FOODS }, { query: SCALES} ]
@@ -211,7 +229,6 @@ const food = ({ view }) => {
     }
 
     const handleCaloriesValue = () => {
-        console.log(chosen)
         return (
             (newItem.foodName || (newItem.scaleName && chosen.food))
             ? 
@@ -219,7 +236,11 @@ const food = ({ view }) => {
             : 
                 chosen.food && chosen.scale && amount
                 ?
-                    chosen.food.calories * parseInt(amount)
+                    foodScaleCaloriesRes.loading || !foodScaleCaloriesRes.data
+                    ?
+                        0 
+                    :
+                        foodScaleCaloriesRes.data.foodScaleCalories.calories * parseInt(amount)
                 :
                     ""
         )

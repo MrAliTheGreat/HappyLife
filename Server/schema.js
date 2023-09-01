@@ -108,13 +108,13 @@ const typeDefs = `
         ): [ExerciseScale]!
 
         foodScaleCalories(
-            foodID: ID!
-            scaleID: ID!
+            foodId: ID!
+            scaleId: ID!
         ): FoodScale
 
         exerciseScaleCalories(
-            exerciseID: ID!
-            scaleID: ID!
+            exerciseId: ID!
+            scaleId: ID!
         ): ExerciseScale
 
         userFoodsToday: [UserFood]!

@@ -188,3 +188,18 @@ export const ADD_FOOD = gql`
         }
     }
 `
+
+export const FOOD_SCALE_CALORIES = gql`
+    query FoodScaleCalories($foodId: ID!, $scaleId: ID!) {
+        foodScaleCalories(foodId: $foodId, scaleId: $scaleId) {
+            calories
+            food {
+                name
+            }
+            scale {
+                name
+                group
+            }
+        }
+    }
+`
