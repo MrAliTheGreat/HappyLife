@@ -3,18 +3,19 @@ import { useQuery } from "@apollo/client"
 
 import styles from "../styles/food.module.css"
 
-import { ALL_FOODS } from "../constants/queries"
+import { FOODS, FOODS_SCALES } from "../constants/queries"
+
 
 const food = ({ view }) => {
-    
-    const foodsResult = useQuery(ALL_FOODS, {
+
+    const foodsScalesRes = useQuery(FOODS_SCALES, {
         onError: (err) => {
             console.log(err.graphQLErrors[0].message)
         },
         skip: view !== "food"
     })
 
-    foodsResult.loading ? null : console.log(foodsResult.data)
+    foodsScalesRes.loading ? null : console.log(foodsScalesRes.data)
 
     const [drop, setDrop] = useState({
         foodName: "",
@@ -131,27 +132,27 @@ const food = ({ view }) => {
     const getFilteredItems = (option) => {
         if(option === "food"){
             return (
-                foodsResult.loading || !foodsResult.data
+                foodsScalesRes.loading || !foodsScalesRes.data
                 ?
                 []
                 :
-                foodsResult.data.allFoods.filter( (food) => {
+                foodsScalesRes.data.allFoodScales.filter((foodScale) => {
                     return(
-                        food.name.toLocaleLowerCase().includes(search.foodName.toLocaleLowerCase().trim()) &&
-                        (chosen.scale ? food.scale.name === chosen.scale.name : true)    
+                        foodScale.food.name.toLocaleLowerCase().includes(search.foodName.toLocaleLowerCase().trim()) &&
+                        (chosen.scale ? foodScale.scale.name === chosen.scale.name : true)    
                     )
                 } )
             )
         }
         return (
-            foodsResult.loading || !foodsResult.data
+            foodsScalesRes.loading || !foodsScalesRes.data
             ?
             []
             :
-            foodsResult.data.allFoods.filter( (food) => {
+            foodsScalesRes.data.allFoodScales.filter( (foodScale) => {
                 return (
-                    food.scale.name.toLocaleLowerCase().includes(search.scaleName.toLocaleLowerCase().trim()) && 
-                    (chosen.food && !newItem.foodName ? food.name === chosen.food.name : true)         
+                    foodScale.scale.name.toLocaleLowerCase().includes(search.scaleName.toLocaleLowerCase().trim()) && 
+                    (chosen.food && !newItem.foodName ? foodScale.food.name === chosen.food.name : true)         
                 )
             } )
         )        
@@ -257,13 +258,13 @@ const food = ({ view }) => {
                     </div>                    
                 </div>                
                 {
-                    getFilteredItems("food").map((food) => {
+                    getFilteredItems("food").map((foodScale) => {
                         return(
-                            <div className={styles.dropdownItem} key={food.id} onClick={() => { handleSelect("food", food, null) }} >
+                            <div className={styles.dropdownItem} key={ foodScale.id } onClick={() => { handleSelect("food", foodScale.food, null) }} >
                                 <div className={styles.holder}>
-                                    <img className={styles.image} src={food.path} />
+                                    <img className={styles.image} src={foodScale.food.path} />
                                 </div>
-                                <div className={styles.name}> {food.name} </div>
+                                <div className={styles.name}> {foodScale.food.name} </div>
                             </div>
                         )
                     })
@@ -313,13 +314,13 @@ const food = ({ view }) => {
                     </div>                    
                 </div>                
                 {
-                    getFilteredItems("scale").map((food) => {
+                    getFilteredItems("scale").map((foodScale) => {
                         return(
-                            <div className={styles.dropdownItem} key={food.id} onClick={() => { handleSelect("scale", null, food.scale) } } >
+                            <div className={styles.dropdownItem} key={foodScale.id} onClick={() => { handleSelect("scale", null, foodScale.scale) } } >
                                 <div className={styles.holder}>
-                                    <img className={styles.image} src={food.scale.path} />
+                                    <img className={styles.image} src={foodScale.scale.path} />
                                 </div>                            
-                                <div className={styles.name}> {food.scale.name} </div>
+                                <div className={styles.name}> {foodScale.scale.name} </div>
                             </div>
                         )
                     })

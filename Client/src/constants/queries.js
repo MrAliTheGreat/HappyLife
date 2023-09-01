@@ -59,12 +59,31 @@ export const CURRENT_USER = gql`
     }
 `
 
-export const ALL_FOODS = gql`
+export const FOODS = gql`
     query AllFoods {
         allFoods {
             id
             name
             path
+        }
+    }
+`
+
+export const FOODS_SCALES = gql`
+    query AllFoodScales {
+        allFoodScales {
+            calories
+            food {
+                id
+                name
+                path
+            }
+            scale {
+                id
+                name
+                path
+            }
+            id
         }
     }
 `

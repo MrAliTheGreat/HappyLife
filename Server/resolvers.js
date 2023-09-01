@@ -65,6 +65,12 @@ const resolvers = {
             return Exercise.find({})
         },
 
+        allScales: async (_, args) => {
+            return Scale.find({
+                group: args.group
+            })
+        },
+
         allFoodScales: async () => {
             return FoodScale.find({}).populate("food").populate("scale")
         },
@@ -218,6 +224,7 @@ const resolvers = {
 
             var scale = new Scale({
                 name: args.scalename.length !== 1 ? getName(args.scalename, " ") : args.scalename,
+                group: "food",
                 path: "/images/icons/Scale.png"
             })
             try{
@@ -227,6 +234,7 @@ const resolvers = {
                 // Duplicate Scale
                 scale = await Scale.findOne({
                     name: args.scalename.length !== 1 ? getName(args.scalename, " ") : args.scalename,
+                    group: "food",
                     path: "/images/icons/Scale.png"
                 })
             }
@@ -278,6 +286,7 @@ const resolvers = {
 
             var scale = new Scale({
                 name: args.scalename.length !== 1 ? getName(args.scalename, " ") : args.scalename,
+                group: "exercise",
                 path: "/images/icons/Scale.png"
             })
             try{
@@ -287,6 +296,7 @@ const resolvers = {
                 // Duplicate Scale
                 scale = await Scale.findOne({
                     name: args.scalename.length !== 1 ? getName(args.scalename, " ") : args.scalename,
+                    group: "exercise",
                     path: "/images/icons/Scale.png"
                 })
             }            
@@ -372,6 +382,7 @@ const resolvers = {
 
             const scale = await Scale.findOne({
                 name: args.scalename,
+                group: "food",
                 path: "/images/icons/Scale.png"   // path: `/image/scales/${args.scalename}.png` --> Custom Path if Needed
             })
             if(!scale){
@@ -440,6 +451,7 @@ const resolvers = {
 
             const scale = await Scale.findOne({
                 name: args.scalename,
+                group: "exercise",
                 path: "/images/icons/Scale.png"   // path: `/image/scales/${args.scalename}.png` --> Custom Path if Needed
             })
             if(!scale){

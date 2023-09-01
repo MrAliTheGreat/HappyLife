@@ -6,10 +6,14 @@ const schema = new mongoose.Schema({
         required: true,
         unique: true
     },
+    group: {
+        type: String,
+        required: true,        
+    },    
     path: {
         type: String,
         required: true,
-    }
+    },
 })
 
 module.exports = mongoose.model("Scale", schema)

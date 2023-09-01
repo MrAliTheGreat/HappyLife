@@ -14,10 +14,12 @@ const typeDefs = `
     type Scale {
         id: ID!
         name: String!
+        group: String!
         path: String!
     }
 
     type FoodScale {
+        id: ID!
         food: Food!
         scale: Scale!
         calories: Int!
@@ -80,6 +82,10 @@ const typeDefs = `
         allFoods: [Food]!
 
         allExercises: [Exercise]!
+
+        allScales(
+            group: String!
+        ): [Scale]!
 
         allFoodScales: [FoodScale]!
 
