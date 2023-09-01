@@ -3,19 +3,29 @@ import { useQuery } from "@apollo/client"
 
 import styles from "../styles/food.module.css"
 
-import { FOODS, FOODS_SCALES } from "../constants/queries"
+import { FOODS, SCALES, FOODS_SCALES } from "../constants/queries"
 
 
 const food = ({ view }) => {
 
-    const foodsScalesRes = useQuery(FOODS_SCALES, {
+    const foodsRes = useQuery(FOODS, {
         onError: (err) => {
             console.log(err.graphQLErrors[0].message)
         },
         skip: view !== "food"
     })
 
-    foodsScalesRes.loading ? null : console.log(foodsScalesRes.data)
+    const scalesRes = useQuery(SCALES, {
+        onError: (err) => {
+            console.log(err.graphQLErrors[0].message)
+        },
+        variables: {
+            group: "food"
+        },        
+        skip: view !== "food"
+    })
+
+    foodsRes.loading ? null : console.log(foodsRes.data)
 
     const [drop, setDrop] = useState({
         foodName: "",
@@ -132,29 +142,31 @@ const food = ({ view }) => {
     const getFilteredItems = (option) => {
         if(option === "food"){
             return (
-                foodsScalesRes.loading || !foodsScalesRes.data
+                chosen.scale
                 ?
-                []
+                    null // foods with that scale --> query
                 :
-                foodsScalesRes.data.allFoodScales.filter((foodScale) => {
-                    return(
-                        foodScale.food.name.toLocaleLowerCase().includes(search.foodName.toLocaleLowerCase().trim()) &&
-                        (chosen.scale ? foodScale.scale.name === chosen.scale.name : true)    
-                    )
-                } )
+                    foodsRes.loading || !foodsRes.data
+                    ? 
+                        [] 
+                    :
+                        foodsRes.data.allFoods.filter((food) => {
+                            return food.name.toLocaleLowerCase().includes(search.foodName.toLocaleLowerCase().trim())
+                        })
             )
         }
         return (
-            foodsScalesRes.loading || !foodsScalesRes.data
+            (chosen.food && !newItem.foodName)
             ?
-            []
+                null // scales with that food --> query
             :
-            foodsScalesRes.data.allFoodScales.filter( (foodScale) => {
-                return (
-                    foodScale.scale.name.toLocaleLowerCase().includes(search.scaleName.toLocaleLowerCase().trim()) && 
-                    (chosen.food && !newItem.foodName ? foodScale.food.name === chosen.food.name : true)         
-                )
-            } )
+                scalesRes.loading || !scalesRes.data
+                ?
+                    []
+                :
+                    scalesRes.data.allScales.filter( (scale) => {
+                        return scale.name.toLocaleLowerCase().includes(search.scaleName.toLocaleLowerCase().trim())
+                    })
         )        
     }
 
@@ -258,13 +270,13 @@ const food = ({ view }) => {
                     </div>                    
                 </div>                
                 {
-                    getFilteredItems("food").map((foodScale) => {
+                    getFilteredItems("food").map((food) => {
                         return(
-                            <div className={styles.dropdownItem} key={ foodScale.id } onClick={() => { handleSelect("food", foodScale.food, null) }} >
+                            <div className={styles.dropdownItem} key={ food.id } onClick={() => { handleSelect("food", food, null) }} >
                                 <div className={styles.holder}>
-                                    <img className={styles.image} src={foodScale.food.path} />
+                                    <img className={styles.image} src={food.path} />
                                 </div>
-                                <div className={styles.name}> {foodScale.food.name} </div>
+                                <div className={styles.name}> {food.name} </div>
                             </div>
                         )
                     })
@@ -314,13 +326,13 @@ const food = ({ view }) => {
                     </div>                    
                 </div>                
                 {
-                    getFilteredItems("scale").map((foodScale) => {
+                    getFilteredItems("scale").map((scale) => {
                         return(
-                            <div className={styles.dropdownItem} key={foodScale.id} onClick={() => { handleSelect("scale", null, foodScale.scale) } } >
+                            <div className={styles.dropdownItem} key={scale.id} onClick={() => { handleSelect("scale", null, scale) } } >
                                 <div className={styles.holder}>
-                                    <img className={styles.image} src={foodScale.scale.path} />
+                                    <img className={styles.image} src={scale.path} />
                                 </div>                            
-                                <div className={styles.name}> {foodScale.scale.name} </div>
+                                <div className={styles.name}> {scale.name} </div>
                             </div>
                         )
                     })

@@ -69,6 +69,17 @@ export const FOODS = gql`
     }
 `
 
+export const SCALES = gql`
+    query AllScales($group: String!) {
+        allScales(group: $group) {
+            group
+            id
+            name
+            path
+        }
+    }
+`
+
 export const FOODS_SCALES = gql`
     query AllFoodScales {
         allFoodScales {
