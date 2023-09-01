@@ -100,8 +100,18 @@ const food = ({ view }) => {
         skip: !(chosen.food && chosen.scale)
     })    
 
-    const [ addFood ] = useMutation(ADD_FOOD, {
-        refetchQueries: [ { query: FOODS }, { query: SCALES} ]
+    const [ addFood, newFood ] = useMutation(ADD_FOOD, {
+        refetchQueries: [
+            {
+                query: FOODS 
+            },
+            { 
+                query: SCALES,
+                variables: {
+                    group: "food"
+                }
+            } 
+        ]
     })
 
     const handleSelect = (option, food, scale) => {
@@ -251,7 +261,6 @@ const food = ({ view }) => {
     }
 
     const handleSubmit = () => {
-        setSubmit(true)
         setShake({
             food: !chosen.food,
             scale: !chosen.scale,
@@ -259,12 +268,26 @@ const food = ({ view }) => {
             calories: newItem.foodName && checkMustShake(newItem.cal),
         })
         setTimeout(() => {
-            setSubmit(false)
             setShake({ food: false, scale: false, amount: false, calories: false })
         }, 800) // Synced with wiggle in food.module.css
 
         if(newItem.foodName || (newItem.scaleName && chosen.food)){
             // Add to list --> addFood Mutation --> wait for res --> if ok then then setSubmit(true)
+            addFood({
+                variables: {
+                    foodname: chosen.food.name,
+                    scalename: chosen.scale.name,
+                    calories: parseInt(newItem.cal)
+                }
+            })
+            
+            // POSSIBLE ERROR HANDLING FOR newFood FAILURE!
+            if(!newFood.loading){
+                setSubmit(true)
+                setTimeout(() => {
+                    setSubmit(false)
+                }, 800) // Synced with wiggle in food.module.css
+            }
         }
         else{
             // Submit --> AddUserFood Mutation --> the same as above
@@ -293,8 +316,7 @@ const food = ({ view }) => {
         return submit && !Object.values(shake).some(v => v)
     }
 
-    // TO DO
-    // id is set by backend
+
 
     return(
         <div className={`${styles.main} ${clear ? styles.swing : ""}`}>

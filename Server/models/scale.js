@@ -4,7 +4,6 @@ const schema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
-        unique: true
     },
     group: {
         type: String,
@@ -15,5 +14,7 @@ const schema = new mongoose.Schema({
         required: true,
     },
 })
+
+schema.index({ name: 1, group: 1 }, { unique: true })
 
 module.exports = mongoose.model("Scale", schema)
