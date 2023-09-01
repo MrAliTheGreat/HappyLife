@@ -1,110 +1,22 @@
 import { useState, useEffect } from "react"
+import { useMutation, useQuery } from "@apollo/client"
 
 import styles from "../styles/exercise.module.css"
 
+import { 
+    EXERCISES,
+    SCALES,
+    EXERCISE_SCALES,
+    SCALE_EXERCISES,
+    EXERCISE_SCALE_CALORIES,
+    ADD_EXERCISE,
+    ADD_USER_EXERCISE,
+    CURRENT_USER,
+    USER_EXERCISES_TODAY
+} from "../constants/queries"
+
+
 const exercise = ({ view }) => {
-    // This will be exercise received from backend
-    const exercises = [
-        {
-            "id": 1,
-            "name": "Lifting",
-            "path": "/animations/Lift.gif",
-        },
-        {
-            "id": 2,
-            "name": "Cycling",
-            "path": "/animations/Cycling.gif",
-        },
-        {
-            "id": 3,
-            "name": "Jump Rope",
-            "path": "/animations/JumpRope.gif",
-        },
-        {
-            "id": 4,
-            "name": "Swimming",
-            "path": "/animations/FrogStroke.gif",
-        },
-        {
-            "id": 5,
-            "name": "Push Ups",
-            "path": "/animations/PushUp.gif",
-        },
-        {
-            "id": 6,
-            "name": "Tennis",
-            "path": "/animations/Tennis.gif",
-        },
-    ]
-
-    const scales = [
-        {
-            "id": 1,
-            "name": "kg",
-            "path": "/images/Search.png",
-        },
-        {
-            "id": 2,
-            "name": "Serving",
-            "path": "/images/Search.png",
-        },
-        {
-            "id": 3,
-            "name": "Palm",
-            "path": "/images/Search.png",
-        },
-        {
-            "id": 4,
-            "name": "Cups",
-            "path": "/images/Search.png",
-        },        
-    ]
-
-    const cals = [
-        {
-            "id": 1,
-            "exerciseName": "Lifting",
-            "scaleName": "kg",
-            "cal": 200,
-        },
-        {
-            "id": 2,
-            "exerciseName": "Cycling",
-            "scaleName": "kg",
-            "cal": 500,
-        },
-        {
-            "id": 3,
-            "exerciseName": "Jump Rope",
-            "scaleName": "Palm",
-            "cal": 40,
-        },
-        {
-            "id": 4,
-            "exerciseName": "Swimming",
-            "scaleName": "Cups",
-            "cal": 60,
-        },
-        {
-            "id": 5,
-            "exerciseName": "Push Ups",
-            "scaleName": "Cups",
-            "cal": 1000,
-        },
-        {
-            "id": 6,
-            "exerciseName": "Tennis",
-            "scaleName": "Serving",
-            "cal": 300,
-        },  
-        {
-            "id": 7,
-            "exerciseName": "Swimming",
-            "scaleName": "Palm",
-            "cal": 400,
-        },              
-    ]
-
     const [drop, setDrop] = useState({
         exerciseName: "",
         scaleName: "",
@@ -142,6 +54,83 @@ const exercise = ({ view }) => {
         setClear(false)
         setSubmit(false)
     }, [view])
+
+    // ======================================================= QUERIES =================================================================
+
+    const exercisesRes = useQuery(EXERCISES, {
+        onError: (err) => {
+            console.log(err.graphQLErrors[0].message)
+        },
+        skip: view !== "exercise"
+    })
+
+    const scalesRes = useQuery(SCALES, {
+        onError: (err) => {
+            console.log(err.graphQLErrors[0].message)
+        },
+        variables: {
+            group: "exercise"
+        },        
+        skip: view !== "exercise"
+    })
+
+    const exerciseScalesRes = useQuery(EXERCISE_SCALES, {
+        onError: (err) => {
+            console.log(err.graphQLErrors[0].message)
+        },
+        variables: {
+            exercisename: chosen.exercise ? chosen.exercise.name : null
+        },        
+        skip: !chosen.exercise
+    })
+
+    const scaleExercisesRes =  useQuery(SCALE_EXERCISES, {
+        onError: (err) => {
+            console.log(err.graphQLErrors[0].message)
+        },
+        variables: {
+            scalename: chosen.scale ? chosen.scale.name : null
+        },        
+        skip: !chosen.scale
+    })
+
+    const exerciseScaleCaloriesRes =  useQuery(EXERCISE_SCALE_CALORIES, {
+        onError: (err) => {
+            console.log(err.graphQLErrors[0].message)
+        },
+        variables: {
+            exerciseId: chosen.exercise ? chosen.exercise.id : null,
+            scaleId: chosen.scale ? chosen.scale.id : null,
+        },        
+        skip: !(chosen.exercise && chosen.scale)
+    })
+    
+    const [ addExercise, newExercise ] = useMutation(ADD_EXERCISE, {
+        refetchQueries: [
+            {
+                query: EXERCISES 
+            },
+            { 
+                query: SCALES,
+                variables: {
+                    group: "exercise"
+                }
+            } 
+        ]
+    })
+
+    const [ addUserExercise, newUserExercise ] = useMutation(ADD_USER_EXERCISE, {
+        refetchQueries: [
+            {
+                query: CURRENT_USER 
+            },
+            {
+                query: USER_EXERCISES_TODAY
+            }
+        ]
+    })    
+
+    // ======================================================= HANDLERS =================================================================
 
     const handleSelect = (option, exercise, scale) => {
         if(option === "exercise"){
@@ -210,49 +199,78 @@ const exercise = ({ view }) => {
             return
         }
         setNewItem({...newItem, scaleName: e.target.value})
-        chosen.exercise ?
-        e.target.value ?
-        setChosen({...chosen, scale: {id: 0, name: e.target.value, path: "/images/icons/New.png"} }) :
-        setChosen({...chosen, scale: null }) :
-        setShake({...shake, exercise: e.target.value !== ""})
+        if(chosen.exercise){
+            if(e.target.value){
+                setChosen({...chosen, scale: {id: 0, name: e.target.value, path: "/images/icons/New.png"} })
+                setAmount("1")
+                return
+            }
+            setChosen({...chosen, scale: null })
+            setAmount("")
+        }
+        else{
+            setShake({...shake, exercise: e.target.value !== ""})
+        }
     }
 
-    // THIS (SELECTION) CAN BE PLACED ON THE BACKEND AND HANDLED WITH GRAPHQL!!!
     const getFilteredItems = (option) => {
         if(option === "exercise"){
             return (
-                exercises.filter( (exercise) => {
-                    return(
-                        exercise.name.toLocaleLowerCase().includes(search.exerciseName.toLocaleLowerCase().trim()) && (
-                        chosen.scale ? 
-                        cals.filter(({ exerciseName, scaleName }) => {
-                            return exerciseName === exercise.name && scaleName === chosen.scale.name
-                        }).length > 0 : true )            
-                    )
-                } )
-            )
+                chosen.scale
+                ?
+                    scaleExercisesRes.loading || !scaleExercisesRes.data
+                    ?
+                        []
+                    :
+                    scaleExercisesRes.data.scaleExercises.map((scaleExercise) => {
+                        return scaleExercise.exercise
+                    })                        
+                :
+                    exercisesRes.loading || !exercisesRes.data
+                    ? 
+                        [] 
+                    :
+                        exercisesRes.data.allExercises.filter((exercise) => {
+                            return exercise.name.toLocaleLowerCase().includes(search.exerciseName.toLocaleLowerCase().trim())
+                        })
+            )            
         }
         return (
-            scales.filter( (scale) => {
-                return (
-                    scale.name.toLocaleLowerCase().includes(search.scaleName.toLocaleLowerCase().trim()) && (
-                    chosen.exercise && !newItem.exerciseName ? 
-                    cals.filter(({ exerciseName, scaleName }) => {
-                        return scaleName === scale.name && exerciseName === chosen.exercise.name 
-                    }).length > 0 : true )            
-                )
-            } )
+            (chosen.exercise && !newItem.exerciseName)
+            ?
+                exerciseScalesRes.loading || !exerciseScalesRes.data
+                ?
+                    []
+                :
+                    exerciseScalesRes.data.exerciseScales.map((exerciseScale) => {
+                        return exerciseScale.scale
+                    })
+            :
+                scalesRes.loading || !scalesRes.data
+                ?
+                    []
+                :
+                    scalesRes.data.allScales.filter( (scale) => {
+                        return scale.name.toLocaleLowerCase().includes(search.scaleName.toLocaleLowerCase().trim())
+                    })
         )        
     }
 
     const handleCaloriesValue = () => {
         return (
-            (newItem.exerciseName || (newItem.scaleName && chosen.exercise)) ? 
-            newItem.cal : 
-            chosen.exercise && chosen.scale && amount ?
-            cals.filter(
-                ({ exerciseName, scaleName }) => chosen.exercise.name === exerciseName && chosen.scale.name === scaleName
-            )[0].cal * parseInt(amount): ""
+            (newItem.exerciseName || (newItem.scaleName && chosen.exercise))
+            ? 
+                newItem.cal 
+            : 
+                chosen.exercise && chosen.scale && amount
+                ?
+                    exerciseScaleCaloriesRes.loading || !exerciseScaleCaloriesRes.data
+                    ?
+                        0 
+                    :
+                        exerciseScaleCaloriesRes.data.exerciseScaleCalories.calories * parseInt(amount)
+                :
+                    ""
         )
     }
 
@@ -261,7 +279,6 @@ const exercise = ({ view }) => {
     }
 
     const handleSubmit = () => {
-        setSubmit(true)
         setShake({
             exercise: !chosen.exercise,
             scale: !chosen.scale,
@@ -269,13 +286,43 @@ const exercise = ({ view }) => {
             calories: newItem.exerciseName && checkMustShake(newItem.cal),
         })
         setTimeout(() => {
-            setSubmit(false)
             setShake({ exercise: false, scale: false, amount: false, calories: false })
         }, 800) // Synced with wiggle in exercise.module.css
-
-
         
         if(chosen.exercise && chosen.scale && !checkMustShake(amount) && !(newItem.exerciseName && checkMustShake(newItem.cal))){
+            if(newItem.exerciseName || (newItem.scaleName && chosen.exercise)){
+                addExercise({
+                    variables: {
+                        exercisename: chosen.exercise.name,
+                        scalename: chosen.scale.name,
+                        calories: parseInt(newItem.cal)
+                    }
+                })
+                // POSSIBLE ERROR HANDLING FOR newExercise FAILURE!
+                if(!newExercise.loading){
+                    setSubmit(true)
+                    setTimeout(() => {
+                        setSubmit(false)
+                    }, 800) // Synced with wiggle in exercise.module.css
+                }
+            }
+            else{
+                addUserExercise({
+                    variables: {
+                        exercisename: chosen.exercise.name,
+                        scalename: chosen.scale.name,
+                        amount: parseInt(amount)
+                    }
+                })
+                // POSSIBLE ERROR HANDLING FOR newUserExercise FAILURE!
+                if(!newUserExercise.loading){
+                    setSubmit(true)
+                    setTimeout(() => {
+                        setSubmit(false)
+                    }, 800) // Synced with wiggle in exercise.module.css
+                }            
+            }            
+            
             setChosen({ exercise: null, scale: null })
             setSearch({ exerciseName: "", scaleName: "" })
             setNewItem({ exerciseName: "", scaleName: "", cal: "" })
@@ -298,8 +345,7 @@ const exercise = ({ view }) => {
         return submit && !Object.values(shake).some(v => v)
     }
 
-    // TO DO
-    // id is set by backend
+    // ======================================================= RENDER =================================================================
 
     return(
         <div className={`${styles.main} ${clear ? styles.swing : ""}`}>

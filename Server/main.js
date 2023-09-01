@@ -27,7 +27,7 @@ startStandaloneServer(server, {
         host: process.env.APOLLO_URL,
         port: process.env.APOLLO_PORT,
     },
-    context: async ({ req, _ }) => {
+    context: async ({ req }) => {
         let valid = true;
         const auth = req ? req.headers.authorization : null
         if(auth && auth.startsWith("Bearer ")){

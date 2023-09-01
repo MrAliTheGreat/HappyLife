@@ -13,7 +13,6 @@ import {
     ADD_USER_FOOD,
     CURRENT_USER,
     USER_FOODS_TODAY,
-    USER_EXERCISES_TODAY,
 } from "../constants/queries"
 
 
@@ -126,9 +125,6 @@ const food = ({ view }) => {
             },
             {
                 query: USER_FOODS_TODAY
-            },
-            {
-                query: USER_EXERCISES_TODAY
             }
         ]
     })
