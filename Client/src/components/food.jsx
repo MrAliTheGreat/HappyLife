@@ -9,11 +9,16 @@ import {
     FOOD_SCALES, 
     SCALE_FOODS, 
     FOOD_SCALE_CALORIES, 
-    ADD_FOOD 
+    ADD_FOOD,
+    ADD_USER_FOOD,
+    CURRENT_USER,
+    USER_FOODS_TODAY,
+    USER_EXERCISES_TODAY,
 } from "../constants/queries"
 
 
 const food = ({ view }) => {
+    // ======================================================= STATES =================================================================
     const [drop, setDrop] = useState({
         foodName: "",
         scaleName: "",
@@ -113,6 +118,22 @@ const food = ({ view }) => {
             } 
         ]
     })
+
+    const [ addUserFood, newUserFood ] = useMutation(ADD_USER_FOOD, {
+        refetchQueries: [
+            {
+                query: CURRENT_USER 
+            },
+            {
+                query: USER_FOODS_TODAY
+            },
+            {
+                query: USER_EXERCISES_TODAY
+            }
+        ]
+    })
+
+    // ======================================================= HANDLERS =================================================================
 
     const handleSelect = (option, food, scale) => {
         if(option === "food"){
@@ -271,29 +292,40 @@ const food = ({ view }) => {
             setShake({ food: false, scale: false, amount: false, calories: false })
         }, 800) // Synced with wiggle in food.module.css
 
-        if(newItem.foodName || (newItem.scaleName && chosen.food)){
-            // Add to list --> addFood Mutation --> wait for res --> if ok then then setSubmit(true)
-            addFood({
-                variables: {
-                    foodname: chosen.food.name,
-                    scalename: chosen.scale.name,
-                    calories: parseInt(newItem.cal)
-                }
-            })
-            
-            // POSSIBLE ERROR HANDLING FOR newFood FAILURE!
-            if(!newFood.loading){
-                setSubmit(true)
-                setTimeout(() => {
-                    setSubmit(false)
-                }, 800) // Synced with wiggle in food.module.css
-            }
-        }
-        else{
-            // Submit --> AddUserFood Mutation --> the same as above
-        }
-        
         if(chosen.food && chosen.scale && !checkMustShake(amount) && !(newItem.foodName && checkMustShake(newItem.cal))){
+            if(newItem.foodName || (newItem.scaleName && chosen.food)){
+                addFood({
+                    variables: {
+                        foodname: chosen.food.name,
+                        scalename: chosen.scale.name,
+                        calories: parseInt(newItem.cal)
+                    }
+                })
+                // POSSIBLE ERROR HANDLING FOR newFood FAILURE!
+                if(!newFood.loading){
+                    setSubmit(true)
+                    setTimeout(() => {
+                        setSubmit(false)
+                    }, 800) // Synced with wiggle in food.module.css
+                }
+            }
+            else{
+                addUserFood({
+                    variables: {
+                        foodname: chosen.food.name,
+                        scalename: chosen.scale.name,
+                        amount: parseInt(amount)
+                    }
+                })
+                // POSSIBLE ERROR HANDLING FOR newUserFood FAILURE!
+                if(!newUserFood.loading){
+                    setSubmit(true)
+                    setTimeout(() => {
+                        setSubmit(false)
+                    }, 800) // Synced with wiggle in food.module.css
+                }            
+            }
+        
             setChosen({ food: null, scale: null })
             setSearch({ foodName: "", scaleName: "" })
             setNewItem({ foodName: "", scaleName: "", cal: "" })
@@ -316,7 +348,7 @@ const food = ({ view }) => {
         return submit && !Object.values(shake).some(v => v)
     }
 
-
+    // ======================================================= RENDER =================================================================
 
     return(
         <div className={`${styles.main} ${clear ? styles.swing : ""}`}>
@@ -437,7 +469,7 @@ const food = ({ view }) => {
                 <input
                     className={styles.value}
                     placeholder="Amount"
-                    value={amount}
+                    value={ amount }
                     readOnly={newItem.foodName || (newItem.scaleName && chosen.food) ? "readonly" : null}
                     onChange={(e) => setAmount(e.target.value)} 
                 />

@@ -25,8 +25,6 @@ const home = ({ setRender, client, user }) => {
         }, 500) // Synced with fade animation home.module.css
     }, [view])
 
-    // console.log(user)
-
     return(
         <div className={styles.main}>
             <Header view={ view } setView={setView} setRender={setRender} client={client}/>

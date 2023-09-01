@@ -13,7 +13,7 @@ function App() {
 
   const client = useApolloClient()
 
-  const { refetch } = useQuery(CURRENT_USER, {
+  const { data, refetch } = useQuery(CURRENT_USER, {
     onError: (err) => {
       console.log(err.graphQLErrors[0].message)
       setRender("login")
@@ -25,6 +25,10 @@ function App() {
       }
     },
   })
+
+  useEffect(() => {
+    data ? setUser(data.currentUserInfo) : null
+  }, [data])
 
   return (
     <>

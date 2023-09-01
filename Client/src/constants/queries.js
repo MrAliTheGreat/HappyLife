@@ -203,3 +203,38 @@ export const FOOD_SCALE_CALORIES = gql`
         }
     }
 `
+
+export const ADD_USER_FOOD = gql`
+    mutation AddUserFood($foodname: String!, $scalename: String!, $amount: Int!) {
+        addUserFood(foodname: $foodname, scalename: $scalename, amount: $amount) {
+            username
+            foods {
+                amount
+                date
+                foodScale {
+                    calories
+                    food {
+                        path
+                        name
+                        id
+                    }
+                    id
+                    scale {
+                        group
+                        id
+                        name
+                        path
+                    }
+                }
+                id
+            }
+            history {
+                date
+                gain
+                loss
+            }
+            streak
+            totalCals
+        }
+    }
+`
