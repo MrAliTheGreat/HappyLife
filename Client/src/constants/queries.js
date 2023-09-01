@@ -119,3 +119,28 @@ export const SCALE_FOODS = gql`
         }
     }
 `
+
+export const USER_FOODS_TODAY = gql`
+    query UserFoodsToday {
+        userFoodsToday {
+            amount
+            date
+            foodScale {
+                calories
+                food {
+                    path
+                    name
+                    id
+                }
+                id
+                scale {
+                    group
+                    id
+                    name
+                    path
+                }
+            }
+            id
+        }
+    }
+`

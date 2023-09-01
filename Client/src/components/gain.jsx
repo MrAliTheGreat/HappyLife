@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { useQuery } from "@apollo/client";
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -10,6 +11,7 @@ import {
 import { Bar } from 'react-chartjs-2';
 import { BarChartOptions } from "../constants/gain";
 import { getDayDate, getGraphVals } from "../utils/tools";
+import { USER_FOODS_TODAY } from "../constants/queries";
 
 import styles from "../styles/gain.module.css"
 
@@ -21,8 +23,15 @@ ChartJS.register(
     Tooltip
 );
 
-const gain = ({ user }) => {
+const gain = ({ view, history }) => {
     const [graphShow, setGraphShow] = useState("")
+
+    const userFoodsTodayRes = useQuery(USER_FOODS_TODAY, {
+        onError: (err) => {
+            console.log(err.graphQLErrors[0].message)
+        },
+        skip: view !== "panel"
+    })
 
     const handleGraph = () => {
         graphShow === "show" ? setGraphShow("hide") :
@@ -39,17 +48,21 @@ const gain = ({ user }) => {
                 </div>
                 <div className={styles.list}>
                     {
-                        user.foods.map((f) => {
-                            return(
-                                <div key={f.id} className={styles.row}>
-                                    <div className={styles.imageHolder}>
-                                        <img className={styles.image} src={ f.foodScale.food.path } />
-                                    </div>                                    
-                                    <div className={styles.name}> {f.foodScale.food.name} </div>
-                                    <div className={styles.cal}> {f.amount * f.foodScale.calories} </div>
-                                </div>
-                            )
-                        })
+                        userFoodsTodayRes.loading || !userFoodsTodayRes.data
+                        ?
+                            <div className={styles.loading}> Loading... </div>
+                        :
+                            userFoodsTodayRes.data.userFoodsToday.map((f) => {
+                                return(
+                                    <div key={f.id} className={styles.row}>
+                                        <div className={styles.imageHolder}>
+                                            <img className={styles.image} src={ f.foodScale.food.path } />
+                                        </div>                                    
+                                        <div className={styles.name}> {f.foodScale.food.name} </div>
+                                        <div className={styles.cal}> {f.amount * f.foodScale.calories} </div>
+                                    </div>
+                                )
+                            })
                     }
                 </div>
             </div>
@@ -60,7 +73,7 @@ const gain = ({ user }) => {
                         {
                             labels: ["Sat", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri"],
                             datasets: [{
-                                data: getGraphVals(user.history, "gain"),
+                                data: getGraphVals(history, "gain"),
                             }]
                         }                        
                     }

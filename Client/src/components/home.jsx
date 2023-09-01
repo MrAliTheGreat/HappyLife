@@ -38,7 +38,7 @@ const home = ({ setRender, client, user }) => {
                     loss={ user.history.at(-1).loss }
                     streak={ user.streak }
                 />
-                <Gain user={ user } />
+                <Gain view={ view } history={ user.history } />
                 <Loss user={ user } />
             </div>
             <div className={`${styles.holder} ${view === "food" ? styles.fadeIn : styles.fadeOut} ${display.food ? "" : styles.start}`} >

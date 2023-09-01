@@ -113,6 +113,21 @@
     height: 100%;
 }
 
+.loading{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100px;
+    height: 100px;
+    align-self: center;
+    margin: 40px 0px;
+    padding: 10px;
+    border-radius: 50%;
+    background: #45d669;
+    box-shadow: #00000050 0px 5px 10px, #00000030 0px 7px 4px;
+    animation: loading 2s linear infinite;
+}
+
 @keyframes fadeIn {
     0%{
         opacity: 0;
@@ -123,6 +138,18 @@
     100%{
         opacity: 0;
     }    
+}
+
+@keyframes loading {
+    25%{
+        background: #a655ed;
+    }
+    50%{
+        background: #f44343;
+    }
+    75%{
+        background: #358cf0;
+    }
 }
 
 @media (max-width:900px) {
