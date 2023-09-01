@@ -15,7 +15,6 @@ function App() {
 
   const { refetch } = useQuery(CURRENT_USER, {
     onError: (err) => {
-      console.log(err)
       console.log(err.graphQLErrors[0].message)
       setRender("login")
     },
@@ -32,7 +31,7 @@ function App() {
       {
         render === "login" ? <Login refetchUser={ refetch } /> :        
         user && render === "welcome" ? <Welcome setRender={ setRender } username={ user.username } /> :
-        user && render === "home" ? <Home setRender={setRender} client={ client } user={user} /> :
+        user && render === "home" ? <Home setRender={setRender} client={ client } user={ user } /> :
         null
       }
     </>

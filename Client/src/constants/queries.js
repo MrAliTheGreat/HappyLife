@@ -11,44 +11,50 @@ export const LOGIN = gql`
 export const CURRENT_USER = gql`
     query CurrentUserInfo {
         currentUserInfo {
-            exercises {
-                amount
-                calories
+            username
+            totalCals
+            streak
+            history {
+                loss
+                gain
                 date
-                exercise {
-                    id
-                    name
-                    scale {
-                        name
-                        path
-                    }
-                    calories
-                    path
-                }
             }
             foods {
-                amount
-                calories
-                date
-                food {
-                    calories
-                    id
-                    name
-                    path
+                id
+                foodScale {
                     scale {
+                        path
+                        name
+                        id
+                    }
+                    food {
+                        id
+                        name
+                        path
+                    }
+                    calories
+                }
+                date
+                amount
+            }
+            exercises {
+                amount
+                date
+                exerciseScale {
+                    calories
+                    exercise {
+                        id
+                        name
+                        path
+                    }
+                    scale {
+                        id
                         name
                         path
                     }
                 }
+                id
             }
-            history {
-                date
-                gain
-                loss
-            }
-            streak
-            totalCals
-            username
         }
     }
 `
@@ -56,14 +62,9 @@ export const CURRENT_USER = gql`
 export const ALL_FOODS = gql`
     query AllFoods {
         allFoods {
-            calories
             id
             name
             path
-            scale {
-                name
-                path
-            }
         }
     }
 `

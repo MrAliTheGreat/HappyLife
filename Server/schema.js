@@ -30,12 +30,14 @@ const typeDefs = `
     }
 
     type UserFood {
+        id: ID!
         foodScale: FoodScale!
         amount: Int!
         date: String!        
     }
 
     type UserExercise {
+        id: ID!
         exerciseScale: ExerciseScale!
         amount: Int!
         date: String!

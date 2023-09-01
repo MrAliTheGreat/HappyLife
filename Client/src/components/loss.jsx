@@ -40,14 +40,14 @@ const loss = ({ user }) => {
                 </div>
                 <div className={styles.list}>
                     {
-                        user.exercises.map(( { calories, exercise } ) => {
+                        user.exercises.map((e) => {
                             return(
-                                <div key={ exercise.id } className={styles.row}>
+                                <div key={ e.id } className={styles.row}>
                                     <div className={styles.imageHolder}>
-                                        <img className={styles.image} src={ exercise.path } />
+                                        <img className={styles.image} src={ e.exerciseScale.exercise.path } />
                                     </div>
-                                    <div className={styles.name}> { exercise.name } </div>
-                                    <div className={styles.cal}> { calories } </div>
+                                    <div className={styles.name}> { e.exerciseScale.exercise.name } </div>
+                                    <div className={styles.cal}> { e.amount * e.exerciseScale.calories } </div>
                                 </div>
                             )
                         })
