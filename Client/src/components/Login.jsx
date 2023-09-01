@@ -19,7 +19,7 @@ const login = ({ refetchUser }) => {
     const [answer, setAnswer] = useState(false)
     const [enter, setEnter] = useState(true)
 
-    const [login, _] = useMutation(LOGIN, {
+    const [login] = useMutation(LOGIN, {
         onError: (err) => {
             console.log(err.graphQLErrors[0].message)
         },

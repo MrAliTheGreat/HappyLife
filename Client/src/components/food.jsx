@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react"
-import { useQuery } from "@apollo/client"
+import { useMutation, useQuery } from "@apollo/client"
 
 import styles from "../styles/food.module.css"
 
-import { FOODS, SCALES, FOOD_SCALES, SCALE_FOODS } from "../constants/queries"
+import { FOODS, SCALES, FOOD_SCALES, SCALE_FOODS, ADD_FOOD } from "../constants/queries"
 
 
 const food = ({ view }) => {
@@ -82,7 +82,9 @@ const food = ({ view }) => {
         skip: !chosen.scale
     })
 
-    foodScalesRes.loading ? null : console.log(foodScalesRes.data)    
+    const [ addFood ] = useMutation(ADD_FOOD, {
+        refetchQueries: [ { query: FOODS }, { query: SCALES} ]
+    })
 
     const handleSelect = (option, food, scale) => {
         if(option === "food"){
@@ -151,11 +153,18 @@ const food = ({ view }) => {
             return
         }
         setNewItem({...newItem, scaleName: e.target.value})
-        chosen.food ?
-        e.target.value ?
-        setChosen({...chosen, scale: {id: 0, name: e.target.value, path: "/images/icons/New.png"} }) :
-        setChosen({...chosen, scale: null }) :
-        setShake({...shake, food: e.target.value !== ""})
+        if(chosen.food){
+            if(e.target.value){
+                setChosen({...chosen, scale: {id: 0, name: e.target.value, path: "/images/icons/New.png"} })
+                setAmount("1")
+                return
+            }
+            setChosen({...chosen, scale: null })
+            setAmount("")
+        }
+        else{
+            setShake({...shake, food: e.target.value !== ""})
+        }
     }
 
     const getFilteredItems = (option) => {
@@ -202,11 +211,17 @@ const food = ({ view }) => {
     }
 
     const handleCaloriesValue = () => {
+        console.log(chosen)
         return (
-            (newItem.foodName || (newItem.scaleName && chosen.food)) ? 
-            newItem.cal : 
-            chosen.food && chosen.scale && amount ?
-            chosen.food.calories * parseInt(amount) : ""
+            (newItem.foodName || (newItem.scaleName && chosen.food))
+            ? 
+                newItem.cal 
+            : 
+                chosen.food && chosen.scale && amount
+                ?
+                    chosen.food.calories * parseInt(amount)
+                :
+                    ""
         )
     }
 
@@ -227,7 +242,12 @@ const food = ({ view }) => {
             setShake({ food: false, scale: false, amount: false, calories: false })
         }, 800) // Synced with wiggle in food.module.css
 
-
+        if(newItem.foodName || (newItem.scaleName && chosen.food)){
+            // Add to list --> addFood Mutation --> wait for res --> if ok then then setSubmit(true)
+        }
+        else{
+            // Submit --> AddUserFood Mutation --> the same as above
+        }
         
         if(chosen.food && chosen.scale && !checkMustShake(amount) && !(newItem.foodName && checkMustShake(newItem.cal))){
             setChosen({ food: null, scale: null })
@@ -384,7 +404,7 @@ const food = ({ view }) => {
                 <input 
                     className={styles.value}
                     placeholder="Calories"
-                    value={handleCaloriesValue()}
+                    value={ handleCaloriesValue() }
                     readOnly={newItem.foodName || (newItem.scaleName && chosen.food) ? null : "readonly"}
                     onChange={(e) => setNewItem({...newItem, cal: e.target.value}) } 
                 />

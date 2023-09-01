@@ -163,6 +163,20 @@ const resolvers = {
             }
 
             return ExerciseScale.find({ scale }).populate("exercise").populate("scale")
+        },
+        
+        foodScaleCalories: async (_, args) => {
+            return FoodScale.findOne({
+                food: args.foodID,
+                scale: args.scaleID
+            }).populate("food").populate("scale")
+        },
+
+        exerciseScaleCalories: async (_, args) => {
+            return ExerciseScale.findOne({
+                exercise: args.exerciseID,
+                scale: args.scaleID
+            }).populate("exercise").populate("scale")
         },        
 
         userFoodsToday: (...[, , { currentUser }]) => {

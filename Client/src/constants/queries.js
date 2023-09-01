@@ -168,3 +168,23 @@ export const USER_EXERCISES_TODAY = gql`
         }
     }
 `
+
+export const ADD_FOOD = gql`
+    mutation AddFood($foodname: String!, $scalename: String!, $calories: Int!) {
+        addFood(foodname: $foodname, scalename: $scalename, calories: $calories) {
+            calories
+            id
+            food {
+                id
+                name
+                path
+            }
+            scale {
+                group
+                id
+                name
+                path
+            }
+        }
+    }
+`

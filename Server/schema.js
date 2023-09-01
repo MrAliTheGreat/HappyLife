@@ -107,6 +107,16 @@ const typeDefs = `
             scalename: String!
         ): [ExerciseScale]!
 
+        foodScaleCalories(
+            foodID: ID!
+            scaleID: ID!
+        ): FoodScale
+
+        exerciseScaleCalories(
+            exerciseID: ID!
+            scaleID: ID!
+        ): ExerciseScale
+
         userFoodsToday: [UserFood]!
 
         userExercisesToday: [UserExercise]!
