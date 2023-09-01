@@ -3,7 +3,7 @@ import { useQuery } from "@apollo/client"
 
 import styles from "../styles/food.module.css"
 
-import { FOODS, SCALES, FOOD_SCALES } from "../constants/queries"
+import { FOODS, SCALES, FOOD_SCALES, SCALE_FOODS } from "../constants/queries"
 
 
 const food = ({ view }) => {
@@ -70,7 +70,17 @@ const food = ({ view }) => {
             foodname: chosen.food ? chosen.food.name : null
         },        
         skip: !chosen.food
-    })    
+    })
+
+    const scaleFoodsRes =  useQuery(SCALE_FOODS, {
+        onError: (err) => {
+            console.log(err.graphQLErrors[0].message)
+        },
+        variables: {
+            scalename: chosen.scale ? chosen.scale.name : null
+        },        
+        skip: !chosen.scale
+    })
 
     foodScalesRes.loading ? null : console.log(foodScalesRes.data)    
 
@@ -153,7 +163,13 @@ const food = ({ view }) => {
             return (
                 chosen.scale
                 ?
-                    [] // foods with that scale --> query
+                    scaleFoodsRes.loading || !scaleFoodsRes.data
+                    ?
+                        []
+                    :
+                    scaleFoodsRes.data.scaleFoods.map((scaleFood) => {
+                        return scaleFood.food
+                    })                        
                 :
                     foodsRes.loading || !foodsRes.data
                     ? 
