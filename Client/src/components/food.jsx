@@ -3,30 +3,10 @@ import { useQuery } from "@apollo/client"
 
 import styles from "../styles/food.module.css"
 
-import { FOODS, SCALES, FOODS_SCALES } from "../constants/queries"
+import { FOODS, SCALES, FOOD_SCALES } from "../constants/queries"
 
 
 const food = ({ view }) => {
-
-    const foodsRes = useQuery(FOODS, {
-        onError: (err) => {
-            console.log(err.graphQLErrors[0].message)
-        },
-        skip: view !== "food"
-    })
-
-    const scalesRes = useQuery(SCALES, {
-        onError: (err) => {
-            console.log(err.graphQLErrors[0].message)
-        },
-        variables: {
-            group: "food"
-        },        
-        skip: view !== "food"
-    })
-
-    foodsRes.loading ? null : console.log(foodsRes.data)
-
     const [drop, setDrop] = useState({
         foodName: "",
         scaleName: "",
@@ -64,6 +44,35 @@ const food = ({ view }) => {
         setClear(false)
         setSubmit(false)
     }, [view])
+
+    const foodsRes = useQuery(FOODS, {
+        onError: (err) => {
+            console.log(err.graphQLErrors[0].message)
+        },
+        skip: view !== "food"
+    })
+
+    const scalesRes = useQuery(SCALES, {
+        onError: (err) => {
+            console.log(err.graphQLErrors[0].message)
+        },
+        variables: {
+            group: "food"
+        },        
+        skip: view !== "food"
+    })
+
+    const foodScalesRes = useQuery(FOOD_SCALES, {
+        onError: (err) => {
+            console.log(err.graphQLErrors[0].message)
+        },
+        variables: {
+            foodname: chosen.food ? chosen.food.name : null
+        },        
+        skip: !chosen.food
+    })    
+
+    foodScalesRes.loading ? null : console.log(foodScalesRes.data)    
 
     const handleSelect = (option, food, scale) => {
         if(option === "food"){
@@ -144,7 +153,7 @@ const food = ({ view }) => {
             return (
                 chosen.scale
                 ?
-                    null // foods with that scale --> query
+                    [] // foods with that scale --> query
                 :
                     foodsRes.loading || !foodsRes.data
                     ? 
@@ -158,7 +167,13 @@ const food = ({ view }) => {
         return (
             (chosen.food && !newItem.foodName)
             ?
-                null // scales with that food --> query
+                foodScalesRes.loading || !foodScalesRes.data
+                ?
+                    []
+                :
+                    foodScalesRes.data.foodScales.map((foodScale) => {
+                        return foodScale.scale
+                    })
             :
                 scalesRes.loading || !scalesRes.data
                 ?

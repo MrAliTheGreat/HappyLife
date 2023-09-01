@@ -80,21 +80,22 @@ export const SCALES = gql`
     }
 `
 
-export const FOODS_SCALES = gql`
-    query AllFoodScales {
-        allFoodScales {
+export const FOOD_SCALES = gql`
+    query FoodScales($foodname: String!) {
+        foodScales(foodname: $foodname) {
             calories
             food {
                 id
                 name
                 path
             }
+            id
             scale {
+                group
                 id
                 name
                 path
             }
-            id
         }
     }
 `

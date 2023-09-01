@@ -99,6 +99,14 @@ const typeDefs = `
             exercisename: String!
         ): [ExerciseScale]!
 
+        scaleFoods(
+            scalename: String!
+        ): [FoodScale]!
+
+        scaleExercises(
+            scalename: String!
+        ): [ExerciseScale]!
+
         userFoodsToday: [UserFood]!
 
         userExercisesToday: [UserExercise]!

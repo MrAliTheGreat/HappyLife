@@ -131,6 +131,40 @@ const resolvers = {
             return exerciseScales
         },
 
+        scaleFoods: async (_, args) => {
+            const scale = await Scale.findOne({
+                name: args.scalename,
+                group: "food"
+            })
+            if(!scale){
+                throw new GraphQLError("Scale Not Found!", {
+                    extensions: {
+                        code: "SCALE_NOT_FOUND",
+                        invalidArgs: args.exercisename,
+                    }
+                })                
+            }
+
+            return FoodScale.find({ scale }).populate("food").populate("scale")
+        },
+
+        scaleExercises: async (_, args) => {
+            const scale = await Scale.findOne({
+                name: args.scalename,
+                group: "exercise"
+            })
+            if(!scale){
+                throw new GraphQLError("Scale Not Found!", {
+                    extensions: {
+                        code: "SCALE_NOT_FOUND",
+                        invalidArgs: args.exercisename,
+                    }
+                })                
+            }
+
+            return ExerciseScale.find({ scale }).populate("exercise").populate("scale")
+        },        
+
         userFoodsToday: (...[, , { currentUser }]) => {
             if(!currentUser){
                 throw new GraphQLError("Access Denied!", {
