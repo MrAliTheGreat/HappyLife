@@ -7,10 +7,10 @@ import { LOGIN } from "../constants/queries"
 const login = ({ refetchUser }) => {
     const animationPaths = [
         "/animations/Cycling.gif",
-        "/animations/FrogStroke.gif",
-        "/animations/JumpRope.gif",
+        "/animations/Frog_Stroke.gif",
+        "/animations/Jump_Rope.gif",
         "/animations/Lift.gif",
-        "/animations/PushUp.gif",
+        "/animations/Push_Up.gif",
         "/animations/Tennis.gif",
     ]
 
