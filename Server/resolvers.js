@@ -257,7 +257,7 @@ const resolvers = {
 
             var food = new Food({
                 name: getName(args.foodname, " "),
-                path: `/images/foods/${getName(args.foodname, "")}.png`
+                path: `/images/foods/${getName(args.foodname, "_")}.png`
             })
             try{
                 await food.save()
@@ -266,7 +266,7 @@ const resolvers = {
                 // Duplicate Food
                 food = await Food.findOne({
                     name: getName(args.foodname, " "),
-                    path: `/images/foods/${getName(args.foodname, "")}.png`
+                    path: `/images/foods/${getName(args.foodname, "_")}.png`
                 })
             }
 
@@ -319,7 +319,7 @@ const resolvers = {
 
             var exercise = new Exercise({
                 name: getName(args.exercisename, " "),
-                path: `/animations/${getName(args.exercisename, "")}.gif`
+                path: `/animations/${getName(args.exercisename, "_")}.gif`
             })
             try{
                 await exercise.save()
@@ -328,7 +328,7 @@ const resolvers = {
                 // Duplicate Exercise
                 exercise = await Exercise.findOne({
                     name: getName(args.exercisename, " "),
-                    path: `/animations/${getName(args.exercisename, "")}.gif`
+                    path: `/animations/${getName(args.exercisename, "_")}.gif`
                 })
             }
 
@@ -417,7 +417,7 @@ const resolvers = {
 
             const food = await Food.findOne({
                 name: args.foodname,
-                path: `/images/foods/${getName(args.foodname, "")}.png`
+                path: `/images/foods/${getName(args.foodname, "_")}.png`
             })
             if(!food){
                 throw new GraphQLError("Food Not Found!", {
@@ -486,7 +486,7 @@ const resolvers = {
 
             const exercise = await Exercise.findOne({
                 name: args.exercisename,
-                path: `/animations/${getName(args.exercisename, "")}.gif`
+                path: `/animations/${getName(args.exercisename, "_")}.gif`
             })
             if(!exercise){
                 throw new GraphQLError("Exercise Not Found!", {

@@ -13,7 +13,7 @@ const getDayDate = () => {
 }
 
 const getName = (name, newChar) => {
-    return name.split(" ").map(word => word.charAt(0).toUpperCase() + word.substring(1)).join(newChar)
+    return name.split(" ").map(word => word.charAt(0).toUpperCase() + word.substring(1).toLowerCase()).join(newChar)
 }
 
 const getBMR = (sex, weight, height, age) => {
