@@ -355,7 +355,14 @@ const exercise = ({ view }) => {
                     ? 
                     <div className={styles.chosenHolder} >
                         <div className={styles.holder}>
-                            <img className={styles.image} src={chosen.exercise.path} />
+                            <img
+                                className={styles.image}
+                                src={chosen.exercise.path}
+                                onError={({ currentTarget }) => {
+                                    currentTarget.onerror = null
+                                    currentTarget.src = "/animations/Whistle.gif"
+                                }}                                 
+                            />
                         </div>
                         <div className={styles.name}> {chosen.exercise.name} </div>
                     </div>
@@ -401,7 +408,14 @@ const exercise = ({ view }) => {
                                 onClick={() => { handleSelect("exercise", exercise, null) }}
                             >
                                 <div className={styles.holder}>
-                                    <img className={styles.image} src={exercise.path} />
+                                    <img
+                                        className={styles.image}
+                                        src={exercise.path}
+                                        onError={({ currentTarget }) => {
+                                            currentTarget.onerror = null
+                                            currentTarget.src = "/animations/Whistle.gif"
+                                        }}                                        
+                                    />
                                 </div>
                                 <div className={styles.name}> {exercise.name} </div>
                             </div>

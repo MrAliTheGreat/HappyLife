@@ -10,7 +10,7 @@ const FoodScale = require("./models/foodScale")
 const ExerciseScale = require("./models/exerciseScale")
 const { getDayDate, getName, getBMR, getStreak } = require("./utils/tools")
 
-const LOSS_RATE = 1000
+const LOSS_RATE = 700
 
 // remainingCals = totalCals - history.gain ==> For frontend!
 

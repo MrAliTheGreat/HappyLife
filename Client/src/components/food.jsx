@@ -354,7 +354,14 @@ const food = ({ view }) => {
                     ? 
                     <div className={styles.chosenHolder} >
                         <div className={styles.holder}>
-                            <img className={styles.image} src={chosen.food.path} />
+                            <img
+                                className={styles.image}
+                                src={chosen.food.path}
+                                onError={({ currentTarget }) => {
+                                    currentTarget.onerror = null
+                                    currentTarget.src = "/images/icons/No_Food.png"
+                                }}                                
+                            />
                         </div>
                         <div className={styles.name}> {chosen.food.name} </div>
                     </div>
@@ -396,7 +403,14 @@ const food = ({ view }) => {
                         return(
                             <div className={styles.dropdownItem} key={ food.id } onClick={() => { handleSelect("food", food, null) }} >
                                 <div className={styles.holder}>
-                                    <img className={styles.image} src={food.path} />
+                                    <img
+                                        className={styles.image}
+                                        src={food.path}
+                                        onError={({ currentTarget }) => {
+                                            currentTarget.onerror = null
+                                            currentTarget.src = "/images/icons/No_Food.png"
+                                        }}                                    
+                                    />
                                 </div>
                                 <div className={styles.name}> {food.name} </div>
                             </div>

@@ -56,7 +56,14 @@ const gain = ({ view, history }) => {
                                 return(
                                     <div key={f.id} className={styles.row}>
                                         <div className={styles.imageHolder}>
-                                            <img className={styles.image} src={ f.foodScale.food.path } />
+                                            <img
+                                                className={styles.image}
+                                                src={ f.foodScale.food.path }
+                                                onError={({ currentTarget }) => {
+                                                    currentTarget.onerror = null
+                                                    currentTarget.src = "/images/icons/No_Food.png"
+                                                }}
+                                            />
                                         </div>                                    
                                         <div className={styles.name}> {f.foodScale.food.name} </div>
                                         <div className={styles.cal}> {f.amount * f.foodScale.calories} </div>

@@ -57,7 +57,14 @@ const loss = ({ view, history }) => {
                                 return(
                                     <div key={ e.id } className={styles.row}>
                                         <div className={styles.imageHolder}>
-                                            <img className={styles.image} src={ e.exerciseScale.exercise.path } />
+                                            <img 
+                                                className={styles.image}
+                                                src={ e.exerciseScale.exercise.path }
+                                                onError={({ currentTarget }) => {
+                                                    currentTarget.onerror = null
+                                                    currentTarget.src = "/animations/Whistle.gif"
+                                                }}                                                
+                                            />
                                         </div>
                                         <div className={styles.name}> { e.exerciseScale.exercise.name } </div>
                                         <div className={styles.cal}> { e.amount * e.exerciseScale.calories } </div>
