@@ -45,7 +45,7 @@
 }
 
 .input {
-    font-family: "Pixellari", sans-serif;
+    font-family: "Pixellari", "Bank", sans-serif;
     font-size: 20px;
     color: #FFFFFF;
     width: 175px;
@@ -58,7 +58,7 @@
 }
 
 .button {
-    font-family: "Pixellari", sans-serif;
+    font-family: "Pixellari", "Bank", sans-serif;
     font-size: 16px;
     color: #FFFFFF;
     width: 190px;
@@ -81,7 +81,7 @@
     justify-content: space-between;
     align-items: center;
     color: #FFFFFF;
-    font-family: "Pixellari", sans-serif;
+    font-family: "Pixellari", "Bank", sans-serif;
     margin-top: 10px;
     padding: 0px 1px;
     box-sizing: border-box;
@@ -206,6 +206,13 @@
 @font-face {
     font-family: "Pixellari";
     src: url("/Pixellari.ttf") format("opentype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Bank";
+    src: url("/Bank.ttf") format("opentype");
     font-weight: normal;
     font-style: normal;
 }
