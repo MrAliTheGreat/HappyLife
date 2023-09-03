@@ -188,11 +188,7 @@ const resolvers = {
                 })
             }
 
-            return currentUser.foods.map((food) => {
-                if(food.date === getDayDate()){
-                    return food
-                }
-            })
+            return currentUser.foods.filter(food => food.date === getDayDate())
         },
 
         userExercisesToday: (...[, , { currentUser }]) => {
@@ -204,11 +200,7 @@ const resolvers = {
                 })
             }
 
-            return currentUser.exercises.map((exercise) => {
-                if(exercise.date === getDayDate()){
-                    return exercise
-                }
-            })
+            return currentUser.exercises.filter(exercise => exercise.date === getDayDate())
         },
 
         currentUserInfo: async (...[, , { currentUser }]) => {
