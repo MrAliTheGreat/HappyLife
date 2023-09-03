@@ -146,7 +146,7 @@ const food = ({ view }) => {
         setDrop({...drop, scaleName: "hide"});
         setSearch({...search, scaleName: ""});
         setNewItem({...newItem, scaleName: ""})
-        setAmount("")        
+        (newItem.foodName || (newItem.scaleName && chosen.food)) ? setAmount("1") : setAmount("")
     }
 
     const handleDropDown = (option) => {

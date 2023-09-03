@@ -147,7 +147,7 @@ const exercise = ({ view }) => {
         setDrop({...drop, scaleName: "hide"});
         setSearch({...search, scaleName: ""});
         setNewItem({...newItem, scaleName: ""})
-        setAmount("")                
+        (newItem.exerciseName || (newItem.scaleName && chosen.exercise)) ? setAmount("1") : setAmount("")                
     }
 
     const handleDropDown = (option) => {
