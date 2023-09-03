@@ -139,11 +139,15 @@ const exercise = ({ view }) => {
             setChosen({...chosen, exercise})
             setDrop({...drop, exerciseName: "hide"})
             setSearch({...search, exerciseName: ""})
+            setNewItem({...newItem, exerciseName: ""})
+            setAmount("")            
             return
         }
         setChosen({...chosen, scale});
         setDrop({...drop, scaleName: "hide"});
-        setSearch({...search, scaleName: ""});        
+        setSearch({...search, scaleName: ""});
+        setNewItem({...newItem, scaleName: ""})
+        setAmount("")                
     }
 
     const handleDropDown = (option) => {

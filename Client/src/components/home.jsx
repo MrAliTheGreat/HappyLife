@@ -27,7 +27,7 @@ const home = ({ setRender, client, user }) => {
 
     return(
         <div className={styles.main}>
-            <Header view={ view } setView={setView} setRender={setRender} client={client}/>
+            <Header view={ view } setView={ setView } setRender={ setRender } client={ client }/>
             <div className={`${styles.holder} ${view === "panel" ? styles.fadeIn : styles.fadeOut} ${display.panel ? "" : styles.start}`} >
                 <Summary 
                     total={ user.totalCals }

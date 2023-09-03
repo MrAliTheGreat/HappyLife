@@ -138,11 +138,15 @@ const food = ({ view }) => {
             setChosen({...chosen, food})
             setDrop({...drop, foodName: "hide"})
             setSearch({...search, foodName: ""})
+            setNewItem({...newItem, foodName: ""})
+            setAmount("")
             return
         }
         setChosen({...chosen, scale});
         setDrop({...drop, scaleName: "hide"});
-        setSearch({...search, scaleName: ""});        
+        setSearch({...search, scaleName: ""});
+        setNewItem({...newItem, scaleName: ""})
+        setAmount("")        
     }
 
     const handleDropDown = (option) => {
