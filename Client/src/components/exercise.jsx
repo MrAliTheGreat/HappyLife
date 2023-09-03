@@ -81,7 +81,9 @@ const exercise = ({ view }) => {
         variables: {
             exercisename: chosen.exercise ? chosen.exercise.name : null
         },        
-        skip: !chosen.exercise
+        skip: !chosen.exercise,
+        fetchPolicy: "network-only",
+        notifyOnNetworkStatusChange: true        
     })
 
     const scaleExercisesRes =  useQuery(SCALE_EXERCISES, {

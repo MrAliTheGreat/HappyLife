@@ -80,7 +80,9 @@ const food = ({ view }) => {
         variables: {
             foodname: chosen.food ? chosen.food.name : null
         },        
-        skip: !chosen.food
+        skip: !chosen.food,
+        fetchPolicy: "network-only",
+        notifyOnNetworkStatusChange: true
     })
 
     const scaleFoodsRes =  useQuery(SCALE_FOODS, {
