@@ -211,7 +211,7 @@ const resolvers = {
             })
         },
 
-        currentUserInfo: (...[, , { currentUser }]) => {
+        currentUserInfo: async (...[, , { currentUser }]) => {
             if(!currentUser){
                 throw new GraphQLError("Access Denied!", {
                     extensions: {
@@ -219,6 +219,8 @@ const resolvers = {
                     }
                 })
             }
+
+            await _addHistory(null, { gain: 0, loss: 0 }, { currentUser }) // Awesome line of code! --> Call a query within a query
 
             return {
                 username: currentUser.username,
