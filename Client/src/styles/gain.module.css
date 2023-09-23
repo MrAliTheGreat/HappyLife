@@ -1,12 +1,14 @@
 .main {
-    background: linear-gradient(60deg, #ff3d3d, #0248dd);
-    box-shadow: #ff3d3d30 0px 19px 38px, #ff3d3d10 0px 15px 12px;
+    background: linear-gradient(45deg, #ff3d3d 10%, #c21a5d 30%, #6b1fcf 60%, #1954d4 80%);
+    box-shadow: #00000030 0px 19px 38px, #00000010 0px 15px 12px;
     position: relative;
     font-family: "Pixellari", "Bank", sans-serif;
     border-radius: 10px;
     padding: 20px;
     margin: 20px;
     box-sizing: border-box;
+    background-size: 400% 400%;
+    animation: gradient 15s ease-in-out infinite;
 }
 
 .main:hover {
@@ -14,7 +16,7 @@
 }
 
 .main:active{
-    box-shadow: #ff3d3d60 0px 19px 38px, #ff3d3d40 0px 15px 12px;
+    box-shadow: #ff3d3d50 0px 19px 38px, #ff3d3d30 0px 15px 12px;
 }
 
 .holder {
@@ -149,6 +151,18 @@
     }
     75%{
         background: #358cf0;
+    }
+}
+
+@keyframes gradient {
+    0%{
+        background-position: 0% 50%;
+    }
+    50%{
+        background-position: 100% 50%;
+    }
+    100%{
+        background-position: 0% 50%;
     }
 }
 
